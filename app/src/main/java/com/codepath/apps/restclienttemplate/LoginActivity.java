@@ -1,12 +1,16 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
+
+	private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +30,16 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	// i.e Display application "homepage"
 	@Override
 	public void onLoginSuccess() {
-		// Intent i = new Intent(this, PhotosActivity.class);
-		// startActivity(i);
+        Log.d(LOG_TAG, "Login successful");
+		 Intent i = new Intent(this, TimelineActivity.class);
+		 startActivity(i);
 	}
 
 	// OAuth authentication flow failed, handle the error
 	// i.e Display an error dialog or toast
 	@Override
 	public void onLoginFailure(Exception e) {
+        Log.d(LOG_TAG, "Login failed");
 		e.printStackTrace();
 	}
 

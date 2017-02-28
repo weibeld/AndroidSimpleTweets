@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -22,32 +23,76 @@ import org.scribe.builder.api.TwitterApi;
  * 
  */
 public class TwitterClient extends OAuthBaseClient {
-	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
-	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "71wT27WT7PvEw5YW4Sn63d5Yf";       // Change this
-	public static final String REST_CONSUMER_SECRET = "Dvhxb9MbBluzl7N3B9UKXtFpB4YNv4ZU8jSQhzaCn6uXxeJWAN"; // Change this
-	public static final String REST_CALLBACK_URL = "x-oauthflow-twitter://arbitraryname.com"; // Change this (here and in manifest)
+
+    private static final String LOG_TAG = TwitterClient.class.getSimpleName();
+
+	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
+	public static final String REST_URL = "https://api.twitter.com/1.1";
+	public static final String REST_CONSUMER_KEY = "71wT27WT7PvEw5YW4Sn63d5Yf";
+	public static final String REST_CONSUMER_SECRET = "Dvhxb9MbBluzl7N3B9UKXtFpB4YNv4ZU8jSQhzaCn6uXxeJWAN";
+	public static final String REST_CALLBACK_URL = "x-oauthflow-twitter://codepath.com";
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
-	public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-		// Can specify query string params directly or through RequestParams.
+	// https://api.twitter.com/1.1/statuses/home_timeline.json
+	public void getHomeTimeline(int page, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getHomeTimeline");
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + apiUrl);
 		RequestParams params = new RequestParams();
-		params.put("format", "json");
-		client.get(apiUrl, params, handler);
+		params.put("page", String.valueOf(page));
+		getClient().get(apiUrl, params, handler);
 	}
 
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
+    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getMentionsTimeline");
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + apiUrl);
+        if (params != null) {
+            Log.d(LOG_TAG, "RequestParams:" + params.toString());
+        }
+        client.get(apiUrl, params, handler);
+    }
+
+    public void postTweets(String tweetString, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "postTweets");
+        String postTweetApiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", tweetString);
+        client.post(postTweetApiUrl, params, handler);
+    }
+
+    public void getCurrentUser(AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getCurrentUser");
+        String currentUserApiUrl = getApiUrl("account/verify_credentials.json");
+        RequestParams params = new RequestParams();
+        params.put("skip_status", String.valueOf(true));
+        client.get(currentUserApiUrl, handler);
+    }
+
+    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getUserTimeline");
+        String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
+        client.get(currentUserApiUrl, params, handler);
+    }
+
+    public void getUserInfo(AsyncHttpResponseHandler handler, long uid) {
+        Log.d(LOG_TAG, "getUserInfo");
+        String userApiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", String.valueOf(uid));
+        client.get(userApiUrl, params, handler);
+    }
+
+    public void getUserInfo(AsyncHttpResponseHandler handler, String screen_name) {
+        Log.d(LOG_TAG, "getUserInfo");
+        String userApiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screen_name);
+        client.get(userApiUrl, params, handler);
+    }
+
 }
