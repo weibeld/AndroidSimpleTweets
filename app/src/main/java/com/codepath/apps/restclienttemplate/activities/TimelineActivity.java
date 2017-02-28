@@ -1,8 +1,12 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.api.TwitterApplication;
+import com.codepath.apps.restclienttemplate.api.TwitterClient;
+import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
