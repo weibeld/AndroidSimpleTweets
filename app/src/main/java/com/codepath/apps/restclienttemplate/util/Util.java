@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 
@@ -75,6 +76,14 @@ public class Util {
         }
 
         return relativeDate;
+    }
+
+    public static void toast(Activity a, String msg) {
+        Toast.makeText(a, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void toastLong(Activity a, String msg) {
+        Toast.makeText(a, msg, Toast.LENGTH_LONG).show();
     }
 
 }

@@ -66,6 +66,7 @@
             android:layout_above="@+id/btnTweet"
             android:hint="@string/hint_edit_text"
             android:gravity="top"
+            android:inputType="textCapSentences"
             />
 
         <Button
