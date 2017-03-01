@@ -4,14 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.api.TwitterApplication;
-import com.codepath.apps.restclienttemplate.api.TwitterClient;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.db.Tweet;
+import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -43,19 +43,28 @@ public class TimelineActivity extends AppCompatActivity {
         mTweets = new ArrayList<>();
         mAdapter = new TweetAdapter(mTweets, this);
         b.recyclerView.setAdapter(mAdapter);
-        b.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        // Get the home timeline
-        TwitterClient client = TwitterApplication.getTwitterClient();
-        client.getHomeTimeline(1, new JsonHttpResponseHandler() {
+        LinearLayoutManager lm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        b.recyclerView.setLayoutManager(lm);
+        b.recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(lm) {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Util.writeToFile("log.json", response.toString());
-                ArrayList<Tweet> fetchedTweets = Tweet.fromJson(response);
-                mTweets.addAll(fetchedTweets);
-                mAdapter.notifyItemRangeInserted(0, fetchedTweets.size());
-                Log.d(LOG_TAG, "Number of fetched tweets: " + fetchedTweets.size());
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadHomeTimelineTweets(page);
             }
         });
 
+        loadHomeTimelineTweets(1);
+    }
+
+    private void loadHomeTimelineTweets(int page) {
+        TwitterApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Util.writeToFile("log.json", response.toString());
+                int oldSize = mTweets.size();
+                ArrayList<Tweet> fetchedTweets = Tweet.fromJson(response);
+                mTweets.addAll(fetchedTweets);
+                mAdapter.notifyItemRangeInserted(oldSize, fetchedTweets.size());
+            }
+        });
     }
 }

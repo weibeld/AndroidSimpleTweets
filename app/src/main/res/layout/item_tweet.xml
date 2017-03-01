@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvUsername"
             android:layout_toRightOf="@+id/ivProfileImage"
-            android:autoLink="all"
+            android:autoLink="web"
             android:text="@{tweet.text}"
             />
     
