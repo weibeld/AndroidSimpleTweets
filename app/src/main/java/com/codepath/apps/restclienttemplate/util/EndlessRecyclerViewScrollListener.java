@@ -16,7 +16,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     // First page to load through an onScroll event (we load page 1 on activity launch)
     private int startingPage = 2;
     // The current offset index of data you have loaded
-    private int currentPage = 0;
+    private int currentPage = 1;
     // The highest page number we can fetch (defined by the API)
     private int maxPage = 120;
     // The total number of items in the dataset after the last load

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
@@ -56,9 +58,12 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void loadHomeTimelineTweets(int page) {
+        Log.d(LOG_TAG, "Loading page " + page);
+        b.progressBar.setVisibility(View.VISIBLE);
         TwitterApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                b.progressBar.setVisibility(View.GONE);
                 Util.writeToFile("log.json", response.toString());
                 int oldSize = mTweets.size();
                 ArrayList<Tweet> fetchedTweets = Tweet.fromJson(response);

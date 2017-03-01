@@ -39,7 +39,6 @@ public class TwitterClient extends OAuthBaseClient {
     // Returns array of Tweets. EAch
 	// https://api.twitter.com/1.1/statuses/home_timeline.json
 	public void getHomeTimeline(int page, AsyncHttpResponseHandler handler) {
-        Log.d(LOG_TAG, "getHomeTimeline");
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
         Log.d(LOG_TAG, "Api Url:" + apiUrl);
 		RequestParams params = new RequestParams();
