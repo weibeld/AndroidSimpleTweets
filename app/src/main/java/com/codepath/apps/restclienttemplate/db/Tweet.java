@@ -1,5 +1,9 @@
 package com.codepath.apps.restclienttemplate.db;
 
+import android.databinding.BindingAdapter;
+import android.widget.TextView;
+
+import com.codepath.apps.restclienttemplate.util.Util;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -71,6 +75,11 @@ public class Tweet extends BaseModel {
             tweets.add(tweet);
         }
         return tweets;
+    }
+
+    @BindingAdapter({"bind:relativeTimestamp"})
+    public static void setRelativeTimestamp(TextView tv, String createdAt) {
+        tv.setText(Util.getRelativeTimeAgo(createdAt));
     }
 
 	/* The where class in this code below will be marked red until you first compile the project, since the code 
