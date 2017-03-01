@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 25
@@ -22,6 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    // Enable Data Binding Library
+    dataBinding {
+        enabled = true
+    }
 }
 
 repositories {
@@ -36,20 +42,24 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:25.1.0'
 
-    // Wrapper around OAuth authentification
+    // Codepath OAuth Handler - wrapper around JavaScribe for OAuth authentication
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
 
-    // Picasso for remote image loading
+    // Picasso - remote image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    // Android Async Http for sending async network requests
+    // Android-Async-Http - sending HTTP requests
     compile 'com.loopj.android:android-async-http:1.4.9'
 
-    // DBFlow for simple persistence with an ORM
+    // DBFlow - ORM for persisting model objects in an SQLite database
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
+    // RecyclerView
+    compile "com.android.support:recyclerview-v7:25.1.0"
+
+    // Apache Commons IO (easy file writing)
     compile 'commons-io:commons-io:2.5'
 
 }
