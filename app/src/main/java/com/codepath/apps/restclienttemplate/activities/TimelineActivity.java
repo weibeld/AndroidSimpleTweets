@@ -1,11 +1,14 @@
 package com.codepath.apps.restclienttemplate.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
@@ -31,8 +34,6 @@ public class TimelineActivity extends AppCompatActivity {
 
     ArrayList<Tweet> mTweets;
     TweetAdapter mAdapter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,5 +72,22 @@ public class TimelineActivity extends AppCompatActivity {
                 mAdapter.notifyItemRangeInserted(oldSize, fetchedTweets.size());
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.timeline, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_compose:
+                Intent i = new Intent(this, ComposeActivity.class);
+                startActivity(i);
+                return true;
+        }
+        return false;
     }
 }

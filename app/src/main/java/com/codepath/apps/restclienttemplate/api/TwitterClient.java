@@ -36,7 +36,7 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-    // Returns array of Tweets. EAch
+    // Returns array of Tweets.
 	// https://api.twitter.com/1.1/statuses/home_timeline.json
 	public void getHomeTimeline(int page, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
@@ -46,14 +46,12 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().get(apiUrl, params, handler);
 	}
 
-    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
-        Log.d(LOG_TAG, "getMentionsTimeline");
-        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
-        Log.d(LOG_TAG, "Api Url:" + apiUrl);
-        if (params != null) {
-            Log.d(LOG_TAG, "RequestParams:" + params.toString());
-        }
-        client.get(apiUrl, params, handler);
+    public void getCurrentUser(AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getCurrentUser");
+        String currentUserApiUrl = getApiUrl("account/verify_credentials.json");
+        RequestParams params = new RequestParams();
+        params.put("skip_status", String.valueOf(true));
+        client.get(currentUserApiUrl, handler);
     }
 
     public void postTweets(String tweetString, AsyncHttpResponseHandler handler) {
@@ -64,12 +62,20 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(postTweetApiUrl, params, handler);
     }
 
-    public void getCurrentUser(AsyncHttpResponseHandler handler) {
-        Log.d(LOG_TAG, "getCurrentUser");
-        String currentUserApiUrl = getApiUrl("account/verify_credentials.json");
-        RequestParams params = new RequestParams();
-        params.put("skip_status", String.valueOf(true));
-        client.get(currentUserApiUrl, handler);
+
+
+
+
+
+
+    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getMentionsTimeline");
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + apiUrl);
+        if (params != null) {
+            Log.d(LOG_TAG, "RequestParams:" + params.toString());
+        }
+        client.get(apiUrl, params, handler);
     }
 
     public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
