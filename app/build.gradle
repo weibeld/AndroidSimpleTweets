@@ -65,4 +65,7 @@ dependencies {
     // Apache Commons IO (easy file writing)
     compile 'commons-io:commons-io:2.5'
 
+    // For SwipeRefreshLayout
+    compile 'com.android.support:support-v4:25.1.0'
+
 }

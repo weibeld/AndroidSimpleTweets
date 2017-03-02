@@ -40,9 +40,11 @@ public class ComposeActivity extends AppCompatActivity {
 
         mActivity = this;
 
+        b.progressBar.setVisibility(View.VISIBLE);
         TwitterApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                b.progressBar.setVisibility(View.GONE);
                 User user = new User(response);
                 b.setUser(user);
             }

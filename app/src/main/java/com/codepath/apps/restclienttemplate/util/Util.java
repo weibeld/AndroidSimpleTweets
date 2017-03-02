@@ -2,11 +2,15 @@ package com.codepath.apps.restclienttemplate.util;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -84,6 +88,32 @@ public class Util {
 
     public static void toastLong(Activity a, String msg) {
         Toast.makeText(a, msg, Toast.LENGTH_LONG).show();
+    }
+
+    // Check if the device is connected to the internet by pinging a known server
+    public static boolean hasInternetConnection() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (IOException | InterruptedException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    // Check if the device has an active network interface. This is NOT the case if the device has
+    // mobile date turned off or is in airplane mode (not sure about the case when the device has
+    // its mobile data quota exceeded or when it's out of mobile network coverage).
+    public static boolean hasActiveNetworkInterface(Context context) {
+        ConnectivityManager c = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = c.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    public static void toggleVisibility(View v) {
+        if (v.getVisibility() == View.VISIBLE) v.setVisibility(View.GONE);
+        else v.setVisibility(View.VISIBLE);
     }
 
 }
