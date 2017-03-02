@@ -1,8 +1,10 @@
 package com.codepath.apps.restclienttemplate.db;
 
 import android.databinding.BindingAdapter;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -41,7 +43,8 @@ public class User extends BaseModel {
             this.id = object.getLong("id");
             this.name = object.getString("name");
             this.screenName = object.getString("screen_name");
-            this.profileImageUrl = object.getString("profile_image_url");
+            // Provided: "mini": 24x24px, "normal": 48x48px, "bigger": 73x73px, "original": WxH
+            this.profileImageUrl = object.getString("profile_image_url").replace("normal", "bigger");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -49,8 +52,10 @@ public class User extends BaseModel {
 
     @BindingAdapter({"bind:imageUrl"})
     public static void loadImage(ImageView view, String url) {
+        Log.d("User", "Loading image " + url);
         Picasso.with(view.getContext())
                 .load(url)
+                .placeholder(R.drawable.placeholder_profile_image_75)
                 .into(view);
     }
 }

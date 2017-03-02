@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,7 +33,10 @@ public class ComposeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
-        getSupportActionBar().setTitle(R.string.title_compose_activity);
+        ActionBar a = getSupportActionBar();
+        a.setTitle(R.string.title_compose_activity);
+        a.setDisplayHomeAsUpEnabled(true);
+        a.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         mActivity = this;
 
@@ -88,5 +92,12 @@ public class ComposeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    // When clicking the navigation icon, just restart parent activity, rather than recreating it
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

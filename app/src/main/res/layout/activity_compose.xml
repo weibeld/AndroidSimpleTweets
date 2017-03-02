@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvName"
                 android:layout_toRightOf="@id/ivProfileImage"
-                android:text="@{`@` + user.screenName}"
+                android:text='@{user.screenName == null ? "" :  `@` + user.screenName}'
                 />
 
         </RelativeLayout>

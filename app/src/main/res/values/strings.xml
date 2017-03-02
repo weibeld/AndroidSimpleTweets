@@ -3,7 +3,7 @@
 
     <string name="app_name">Rest Client Template</string>
     <string name="login_label">Log in</string>
-    <string name="title_compose_activity">Compose New Tweet</string>
+    <string name="title_compose_activity">Compose Tweet</string>
     <string name="button_tweet">Tweet</string>
     <string name="hint_edit_text">Twitter here…</string>
 
