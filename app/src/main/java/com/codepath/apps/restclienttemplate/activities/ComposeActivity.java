@@ -57,13 +57,21 @@ public class ComposeActivity extends AppCompatActivity {
                 TwitterApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Log.d(LOG_TAG, "Tweet published successfully");
+                        Log.d(LOG_TAG, "Tweet posted successfully");
+                        Util.toast(mActivity, "Tweet posted");
                         startActivity(new Intent(mActivity, TimelineActivity.class));
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Util.toastLong(mActivity, "Couldn't publish tweet: " + throwable.getClass().getSimpleName() + "\nResponse: " + errorResponse.toString());
+                        String msg = "Couldn't publish tweet:\n";
+                        if (errorResponse == null)
+                            msg += throwable.getClass().getSimpleName();
+                        // TODO: check error response spec of Twitter and extract and display the error messages of the JSON response
+                        else
+                            msg += errorResponse.toString() + "\n(" +  throwable.getClass().getSimpleName() + ")";
+                        Util.toastLong(mActivity, msg);
+                        Log.d(LOG_TAG, msg);
                         throwable.printStackTrace();
                     }
                 });

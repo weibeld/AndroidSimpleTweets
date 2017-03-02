@@ -87,13 +87,12 @@ public class TimelineActivity extends AppCompatActivity {
     private void loadHomeTimelineTweets(int page, final boolean showProgressBar) {
         Log.d(LOG_TAG, "Loading page " + page);
         b.serverError.setVisibility(View.GONE);
-
         if (showProgressBar) b.progressBar.setVisibility(View.VISIBLE);
+
         TwitterApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                if (showProgressBar) b.progressBar.setVisibility(View.GONE);
-                else b.swipeContainer.setRefreshing(false);
+                turnOffLoadingIndicator();
                 int oldSize = mTweets.size();
                 ArrayList<Tweet> fetchedTweets = Tweet.fromJson(response);
                 mTweets.addAll(fetchedTweets);
@@ -103,18 +102,24 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                if (showProgressBar) b.progressBar.setVisibility(View.GONE);
-                else b.swipeContainer.setRefreshing(false);
+                turnOffLoadingIndicator();
                 b.serverError.setVisibility(View.VISIBLE);
 
                 //java.net.UnknownHostException if there is no Internet connection (and DNS query failed)
                 String msg = "Couldn't load timeline:\n";
                 if (errorResponse == null)
                     msg += throwable.getClass().getSimpleName();
+                // TODO: check error response spec of Twitter and extract and display the error messages of the JSON response
                 else
                     msg += errorResponse.toString() + "\n(" +  throwable.getClass().getSimpleName() + ")";
                 Util.toastLong(mActivity, msg);
                 Log.d(LOG_TAG, msg);
+                throwable.printStackTrace();
+            }
+
+            private void turnOffLoadingIndicator() {
+                if (showProgressBar) b.progressBar.setVisibility(View.GONE);
+                else b.swipeContainer.setRefreshing(false);
             }
         });
     }
