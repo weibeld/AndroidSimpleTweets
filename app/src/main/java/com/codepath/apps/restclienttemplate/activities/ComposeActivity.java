@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.api.TwitterApplication;
+import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.db.User;
 import com.codepath.apps.restclienttemplate.util.Util;
@@ -41,7 +41,7 @@ public class ComposeActivity extends AppCompatActivity {
         mActivity = this;
 
         b.progressBar.setVisibility(View.VISIBLE);
-        TwitterApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
+        SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 b.progressBar.setVisibility(View.GONE);
@@ -53,12 +53,12 @@ public class ComposeActivity extends AppCompatActivity {
         b.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(Util.hasActiveNetworkInterface(mActivity) && Util.hasInternetConnection())) {
-                    Util.toastLong(mActivity, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
-                    return;
-                }
+//                if (!(Util.hasActiveNetworkInterface(mActivity) && Util.hasInternetConnection())) {
+//                    Util.toastLong(mActivity, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
+//                    return;
+//                }
                 String text = b.etCompose.getText().toString();
-                TwitterApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
+                SimpleTweetsApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d(LOG_TAG, "Tweet posted successfully");

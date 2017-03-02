@@ -14,14 +14,18 @@ import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
-import com.codepath.apps.restclienttemplate.api.TwitterApplication;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.db.Tweet;
+import com.codepath.apps.restclienttemplate.db.Tweet_Table;
+import com.codepath.apps.restclienttemplate.db.User;
 import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -37,7 +41,11 @@ public class TimelineActivity extends AppCompatActivity {
     TimelineActivity mActivity;
     ArrayList<Tweet> mTweets;
     TweetAdapter mAdapter;
+    LinearLayoutManager mLayoutManager;
+    boolean mIsPaginationEnabled = false;
 
+    // TODO: get currently authenticated user and save it as a field; display username in app bar and pass User to ComposeActivity
+    // TODO: save currently authenticated user in separate table in database (so that it can be restored if offline)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +54,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         mActivity = this;
 
+        // Check if we have permissions for writing files (just for debugging)
         Util.verifyStoragePermissions(this);
 
         if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection())
@@ -56,21 +65,11 @@ public class TimelineActivity extends AppCompatActivity {
         mTweets = new ArrayList<>();
         mAdapter = new TweetAdapter(mTweets, this);
         b.recyclerView.setAdapter(mAdapter);
-        LinearLayoutManager lm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        b.recyclerView.setLayoutManager(lm);
-        b.recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(lm) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                loadHomeTimelineTweets(page, true);
-            }
-        });
-
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        b.recyclerView.setLayoutManager(mLayoutManager);
         b.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                int oldSize = mTweets.size();
-                mTweets.clear();
-                mAdapter.notifyItemRangeRemoved(0, oldSize);
                 loadHomeTimelineTweets(1, false);
             }
         });
@@ -79,34 +78,70 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        // Normal (online) mode
+        if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection()) {
+            enablePagination();
+            loadHomeTimelineTweets(1, true);
 
+        }
+        // Offline mode
+        else {
+            // TODO: indicate offline mode (e.g. text or icon in app bar)
+            ArrayList<Tweet> savedTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
+            mTweets.addAll(savedTweets);
+            mAdapter.notifyItemRangeInserted(0, savedTweets.size());
+            //Util.toastLong(this, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
 
-        loadHomeTimelineTweets(1, true);
+        }
+    }
+
+    private void enablePagination() {
+        mIsPaginationEnabled = true;
+        b.recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadHomeTimelineTweets(page, true);
+            }
+        });
     }
 
     private void loadHomeTimelineTweets(int page, final boolean showProgressBar) {
         Log.d(LOG_TAG, "Loading page " + page);
         b.serverError.setVisibility(View.GONE);
 
-        if (!(Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection())) {
-            Util.toastLong(this, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
-            if (!showProgressBar) b.swipeContainer.setRefreshing(false);
-            return;
-        }
-
         if (showProgressBar) b.progressBar.setVisibility(View.VISIBLE);
 
-        TwitterApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
+        SimpleTweetsApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 turnOffLoadingIndicator();
+                if (!showProgressBar) {
+                    int oldSize = mTweets.size();
+                    mTweets.clear();
+                    mAdapter.notifyItemRangeRemoved(0, oldSize);
+                    // Delete all tweets from the database
+                    Tweet.clearTable();
+                    User.clearTable();
+                    if (!mIsPaginationEnabled) enablePagination();
+                }
+                // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
+                ArrayList<Tweet> fetchedTweets = new ArrayList<>();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Tweet tweet = new Tweet(response.getJSONObject(i));
+                        fetchedTweets.add(tweet);
+                        // Save each Tweet in the database (automatically creates User entries)
+                        tweet.save();
+                    } catch (JSONException e) { e.printStackTrace(); }
+
+                }
                 int oldSize = mTweets.size();
-                ArrayList<Tweet> fetchedTweets = Tweet.fromJson(response);
                 mTweets.addAll(fetchedTweets);
                 mAdapter.notifyItemRangeInserted(oldSize, fetchedTweets.size());
-                Util.writeToFile("log.json",    response.toString());
+                //Util.writeToFile("log.json", response.toString());
             }
 
+            // TODO: change failure handling (probably just display toasts if there's a failure)
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 turnOffLoadingIndicator();

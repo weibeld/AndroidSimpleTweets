@@ -1,8 +1,9 @@
-package com.codepath.apps.restclienttemplate.api;
+package com.codepath.apps.restclienttemplate.util;
 
 import android.app.Application;
 import android.content.Context;
 
+import com.codepath.apps.restclienttemplate.api.TwitterClient;
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
@@ -13,11 +14,11 @@ import com.raizlabs.android.dbflow.config.FlowManager;
  * including the image cache in memory and on disk. This also adds a singleton
  * for accessing the relevant rest client.
  *
- *     TwitterClient client = TwitterApplication.getTwitterClient();
+ *     TwitterClient client = SimpleTweetsApplication.getTwitterClient();
  *     // use client to send requests to API
  *
  */
-public class TwitterApplication extends Application {
+public class SimpleTweetsApplication extends Application {
 	private static Context context;
 
 	@Override
@@ -29,10 +30,10 @@ public class TwitterApplication extends Application {
 		FlowManager.init(new FlowConfig.Builder(this).build());
 		FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
 
-		TwitterApplication.context = this;
+		SimpleTweetsApplication.context = this;
 	}
 
 	public static TwitterClient getTwitterClient() {
-		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, TwitterApplication.context);
+		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, SimpleTweetsApplication.context);
 	}
 }

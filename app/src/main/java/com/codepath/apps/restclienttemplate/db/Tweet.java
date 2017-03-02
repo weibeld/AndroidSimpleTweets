@@ -8,21 +8,14 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-/*
- * This is a temporary, sample model that demonstrates the basic structure
- * of a SQLite persisted Model object. Check out the DBFlow wiki for more details:
- * https://github.com/codepath/android_guides/wiki/DBFlow-Guide
- *
- * Note: All models **must extend from** `BaseModel` as shown below.
- * 
+/**
+ * Model for a Twitter tweet.
  */
 @Table(database = MyDatabase.class)
 public class Tweet extends BaseModel {
@@ -32,57 +25,43 @@ public class Tweet extends BaseModel {
 	public Long id;
 
 	@Column
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(saveForeignKeyModel = true)
     public User user;
 
+    // TODO: save date as Date (see https://guides.codepath.com/android/DBFlow-Guide#common-questions)
 	@Column
     public String createdAt;
 
 	@Column
     public String text;
 
+    // Empty default constructor (required by DBFlow)
 	public Tweet() {
 		super();
 	}
 
-	// Add a constructor that creates an object from the JSON response
+    // Constructor for creating a Tweet from the returned JSON object of a tweet (status)
 	public Tweet(JSONObject object){
 		super();
 		try {
-            this.id = object.getLong("id");
-			this.user = new User(object.getJSONObject("user"));
-			this.createdAt = object.getString("created_at");
-			this.text = object.getString("text");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+            id = object.getLong("id");
+			user = new User(object.getJSONObject("user"));
+			createdAt = object.getString("created_at");
+			text = object.getString("text");
+		} catch (JSONException e) { e.printStackTrace(); }
 	}
-
-    public static ArrayList<Tweet> fromJson(JSONArray jsonArray) {
-        ArrayList<Tweet> tweets = new ArrayList<>(jsonArray.length());
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject tweetJson;
-            try {
-                tweetJson = jsonArray.getJSONObject(i);
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            Tweet tweet = new Tweet(tweetJson);
-            tweet.save();
-            tweets.add(tweet);
-        }
-        return tweets;
-    }
 
     @BindingAdapter({"bind:relativeTimestamp"})
     public static void setRelativeTimestamp(TextView tv, String createdAt) {
         tv.setText(Util.getRelativeTimeAgo(createdAt));
     }
 
-	/* The where class in this code below will be marked red until you first compile the project, since the code 
+    // Delete all rows of this table
+    public static void clearTable() {
+        SQLite.delete().from(Tweet.class).query();
+    }
+
+    /* The where class in this code below will be marked red until you first compile the project, since the code
 	 * for the SampleModel_Table class is generated at compile-time.
 	 */
 	

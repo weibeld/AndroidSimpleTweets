@@ -8,6 +8,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +34,7 @@ public class User extends BaseModel {
     @Column
     public String profileImageUrl;
 
+    // Empty default constructor (required by DBFlow)
     public User() {
         super();
     }
@@ -48,6 +50,11 @@ public class User extends BaseModel {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    // Delete all rows of this table
+    public static void clearTable() {
+        SQLite.delete().from(Tweet.class).query();
     }
 
     @BindingAdapter({"bind:imageUrl"})
