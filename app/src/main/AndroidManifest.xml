@@ -38,8 +38,8 @@
         </activity>
         <activity android:name=".activities.TimelineActivity"></activity>
         <activity
-            android:parentActivityName=".activities.TimelineActivity"
             android:name=".activities.ComposeActivity"
+            android:parentActivityName=".activities.TimelineActivity"
             android:windowSoftInputMode="adjustResize"
             >
         </activity>
