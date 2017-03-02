@@ -36,7 +36,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TimelineActivity"></activity>
-        <activity android:name=".activities.ComposeActivity"></activity>
+        <activity
+            android:name=".activities.ComposeActivity"
+            android:windowSoftInputMode="adjustResize"
+            >
+        </activity>
     </application>
 
 </manifest>

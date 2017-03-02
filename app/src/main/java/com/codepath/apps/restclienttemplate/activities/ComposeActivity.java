@@ -2,8 +2,11 @@ package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -58,6 +61,31 @@ public class ComposeActivity extends AppCompatActivity {
                         throwable.printStackTrace();
                     }
                 });
+            }
+        });
+
+        // Count number of entered characters and display it in the character count TextView
+        b.etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int remaining = 140 - s.toString().length();
+                b.tvCharacterCount.setText("" + remaining);
+
+                if (remaining >= 0) {
+                    b.tvCharacterCount.setTextColor(Color.BLACK);
+                    if (!b.btnTweet.isEnabled()) b.btnTweet.setEnabled(true);
+                }
+                else {
+                    b.tvCharacterCount.setTextColor(Color.RED);
+                    if (b.btnTweet.isEnabled()) b.btnTweet.setEnabled(false);
+                }
+
             }
         });
     }
