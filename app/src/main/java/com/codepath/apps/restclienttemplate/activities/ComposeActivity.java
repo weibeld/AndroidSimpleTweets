@@ -53,6 +53,10 @@ public class ComposeActivity extends AppCompatActivity {
         b.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(Util.hasActiveNetworkInterface(mActivity) && Util.hasInternetConnection())) {
+                    Util.toastLong(mActivity, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
+                    return;
+                }
                 String text = b.etCompose.getText().toString();
                 TwitterApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                     @Override

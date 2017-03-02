@@ -87,6 +87,13 @@ public class TimelineActivity extends AppCompatActivity {
     private void loadHomeTimelineTweets(int page, final boolean showProgressBar) {
         Log.d(LOG_TAG, "Loading page " + page);
         b.serverError.setVisibility(View.GONE);
+
+        if (!(Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection())) {
+            Util.toastLong(this, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
+            if (!showProgressBar) b.swipeContainer.setRefreshing(false);
+            return;
+        }
+
         if (showProgressBar) b.progressBar.setVisibility(View.VISIBLE);
 
         TwitterApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
