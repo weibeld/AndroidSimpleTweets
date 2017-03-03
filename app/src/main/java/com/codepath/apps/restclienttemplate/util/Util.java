@@ -130,7 +130,7 @@ public class Util {
     }
 
     public static User getCurrentUserFromPrefs(Context c) {
-        SharedPreferences prefs = SimpleTweetsApplication.getSharedPreferences();
+        SharedPreferences prefs = MyApplication.getSharedPreferences();
         Gson gson = new Gson();
         String json = prefs.getString(c.getString(R.string.pref_current_user), gson.toJson(new User()));
         return gson.fromJson(json, User.class);

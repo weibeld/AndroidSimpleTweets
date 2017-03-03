@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,7 @@ import com.codepath.apps.restclienttemplate.db.Tweet;
 import com.codepath.apps.restclienttemplate.db.Tweet_Table;
 import com.codepath.apps.restclienttemplate.db.User;
 import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
+import com.codepath.apps.restclienttemplate.util.MyApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -49,167 +48,151 @@ public class TimelineActivity extends AppCompatActivity {
     ActivityTimelineBinding b;
 
     TimelineActivity mActivity;
-    ArrayList<Tweet> mTweets;
+    ArrayList<Tweet> mData;
     TweetAdapter mAdapter;
     LinearLayoutManager mLayoutManager;
-    boolean mIsPaginationEnabled = false;
     User mCurrentUser;
-
+    EndlessRecyclerViewScrollListener mScrollListener;
     boolean mIsOfflineMode = false;
 
-    // TODO: add logout menu item
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         b = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
 
         mActivity = this;
-
-        // Check if we have permissions for writing files (just for debugging)
-        Util.verifyStoragePermissions(this);
-
-        if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection())
-            Log.d(LOG_TAG, "Internet available");
-        else
-            Log.d(LOG_TAG, "No internet connection");
-
-        getSupportActionBar().setTitle("Simple Tweets");
-        getSupportActionBar().setSubtitle(" ");
-
-        mTweets = new ArrayList<>();
-        mAdapter = new TweetAdapter(mTweets, this);
-        b.recyclerView.setAdapter(mAdapter);
+        mData = new ArrayList<>();
+        mAdapter = new TweetAdapter(mData, this);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
         b.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadHomeTimelineTweets(1, false);
+                loadTweets(1, true);
             }
         });
-        b.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        b.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+
+        mScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadTweets(page, false);
+            }
+        };
+
+        // Set placeholder for subtitle of ActionBar (will be replaced by username of current user)
+        getSupportActionBar().setSubtitle(" ");
 
         // Normal (online) mode
         if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection()) {
-            SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
+            // Get currently logged in user and save it in SharedPreferences
+            MyApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    b.progressBar.setVisibility(View.GONE);
-                    User user = new User(response);
-                    mCurrentUser = user;
+                    mCurrentUser= new User(response);
                     setAppBarSubtitle();
-                    SharedPreferences.Editor e = SimpleTweetsApplication.getSharedPreferences().edit();
-                    e.putString(getString(R.string.pref_current_user), (new Gson()).toJson(mCurrentUser));
-                    e.apply();
+                    MyApplication.getSharedPreferences()
+                            .edit()
+                            .putString(getString(R.string.pref_current_user), (new Gson()).toJson(mCurrentUser))
+                            .apply();
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Util.toastLong(mActivity, getString(R.string.server_error));
+                    mCurrentUser = new User();  // Create empty fake user
                 }
             });
-            enablePagination();
-            DbUtils.clearTables();
-            loadHomeTimelineTweets(1, true);
+            b.recyclerView.addOnScrollListener(mScrollListener);
+            loadTweets(1, false);
 
         }
         // Offline mode
         else {
-            SharedPreferences prefs = SimpleTweetsApplication.getSharedPreferences();
-            long date = prefs.getLong(getString(R.string.pref_last_update), 0);
-            SpannableString msg = new SpannableString("OFFLINE (last update " + date + ")");
-            msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
-            msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
-            b.tvOffline.setText(msg);
-            b.tvOffline.setVisibility(View.VISIBLE);
-            ArrayList<Tweet> savedTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
-            mTweets.addAll(savedTweets);
-            mAdapter.notifyItemRangeInserted(0, savedTweets.size());
-            //Util.toastLong(this, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
-
             mCurrentUser = Util.getCurrentUserFromPrefs(this);
             setAppBarSubtitle();
-            mIsOfflineMode = true;
+            enableOfflineMode();
         }
-
     }
 
     private void setAppBarSubtitle() {
-        getSupportActionBar().setSubtitle("@" + mCurrentUser.screenName + "'s home timeline");
+        String s = String.format(getString(R.string.subtitle_app_bar), mCurrentUser.screenName);
+        getSupportActionBar().setSubtitle(s);
     }
 
-    private void enablePagination() {
-        mIsPaginationEnabled = true;
-        b.recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                loadHomeTimelineTweets(page, true);
-            }
-        });
+    private void enableOfflineMode() {
+        // Set up offline indicator
+        SharedPreferences prefs = MyApplication.getSharedPreferences();
+        long ts = prefs.getLong(getString(R.string.pref_last_update), 0);
+        String text = String.format(getString(R.string.offline_timeline_activity), ts + "");
+        SpannableString msg = new SpannableString(text);
+        msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
+        msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
+        b.tvOffline.setText(msg);
+        b.tvOffline.setVisibility(View.VISIBLE);
+
+        // Disable endless scrolling
+        b.recyclerView.removeOnScrollListener(mScrollListener);
+
+        // Clear data in memory (if any) and load data from database
+        mAdapter.clear();
+        ArrayList<Tweet> dbTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
+        mAdapter.append(dbTweets);
+
+        mIsOfflineMode = true;
     }
 
-    private void loadHomeTimelineTweets(final int page, final boolean showProgressBar) {
-        Log.d(LOG_TAG, "Loading page " + page);
-        b.serverError.setVisibility(View.GONE);
+    private void disableOfflineMode() {
+        b.tvOffline.setVisibility(View.GONE);
+        b.recyclerView.addOnScrollListener(mScrollListener);
+        mIsOfflineMode = false;
+    }
 
-        if (showProgressBar) b.progressBar.setVisibility(View.VISIBLE);
-
-        SimpleTweetsApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
+    private void loadTweets(final int page, final boolean isRefreshing) {
+        if (!isRefreshing) b.progressBar.setVisibility(View.VISIBLE);
+        MyApplication.getTwitterClient().getHomeTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // Turn off progress bar or pull-to-refresh wheel
                 turnOffLoadingIndicator();
-                if (!showProgressBar) {
-                    int oldSize = mTweets.size();
-                    mTweets.clear();
-                    mAdapter.notifyItemRangeRemoved(0, oldSize);
+                // If fetching first page (either on activity creation or pull-to-refresh)
+                if (page == 1) {
+                    // Clear all existing data
+                    mAdapter.clear();
                     DbUtils.clearTables();
-                    if (!mIsPaginationEnabled) enablePagination();
-                    Util.hideIfShown(b.tvOffline);
-                    mIsOfflineMode = false;
+                    // Save the "last update" time in the SharedPreferences
+                    long ts = GregorianCalendar.getInstance().getTimeInMillis();
+                    MyApplication.getSharedPreferences()
+                            .edit()
+                            .putLong(getString(R.string.pref_last_update), ts)
+                            .apply();
                 }
+                // If we were previously in offline mode, now we have Internet again
+                if (mIsOfflineMode) disableOfflineMode();
                 // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
-                ArrayList<Tweet> fetchedTweets = new ArrayList<>();
+                ArrayList<Tweet> tweets = new ArrayList<>();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         Tweet tweet = new Tweet(response.getJSONObject(i));
-                        fetchedTweets.add(tweet);
+                        tweets.add(tweet);
                         // Save each Tweet in the database (automatically creates User entries)
                         tweet.save();
                     } catch (JSONException e) { e.printStackTrace(); }
 
                 }
-                int oldSize = mTweets.size();
-                mTweets.addAll(fetchedTweets);
-                mAdapter.notifyItemRangeInserted(oldSize, fetchedTweets.size());
-                if (page == 1) {
-                    SharedPreferences.Editor e = SimpleTweetsApplication.getSharedPreferences().edit();
-                    long ts = GregorianCalendar.getInstance().getTimeInMillis();
-                    e.putLong(getString(R.string.pref_last_update), ts);
-                    e.apply();
-                }
-                //Util.writeToFile("log.json", response.toString());
+                mAdapter.append(tweets);
             }
 
-            // TODO: change failure handling (probably just display toasts if there's a failure)
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // Turn off progress bar or pull-to-refresh wheel
                 turnOffLoadingIndicator();
-                b.serverError.setVisibility(View.VISIBLE);
-
-                //java.net.UnknownHostException if there is no Internet connection (and DNS query failed)
-                String msg = "Couldn't load timeline:\n";
-                if (errorResponse == null)
-                    msg += throwable.getClass().getSimpleName();
-                // TODO: check error response spec of Twitter and extract and display the error messages of the JSON response
-                else
-                    msg += errorResponse.toString() + "\n(" +  throwable.getClass().getSimpleName() + ")";
-                Util.toastLong(mActivity, msg);
-                Log.d(LOG_TAG, msg);
-                throwable.printStackTrace();
+                Util.toastLong(mActivity, getString(R.string.server_error));
             }
 
             private void turnOffLoadingIndicator() {
-                if (showProgressBar) b.progressBar.setVisibility(View.GONE);
-                else b.swipeContainer.setRefreshing(false);
+                if (isRefreshing) b.swipeContainer.setRefreshing(false);
+                else b.progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -230,7 +213,7 @@ public class TimelineActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_logout:
-                SimpleTweetsApplication.getTwitterClient().clearAccessToken();
+                MyApplication.getTwitterClient().clearAccessToken();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();  // Destroy this activity so that it's not kept on the back stack
                 return true;

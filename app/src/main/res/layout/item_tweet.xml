@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/ivProfileImage"
-            android:text="@{`@` + tweet.user.screenName}"
+            android:text="@{tweet.user.screenName}"
             />
 
         <TextView

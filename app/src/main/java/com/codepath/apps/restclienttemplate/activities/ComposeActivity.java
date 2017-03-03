@@ -17,7 +17,7 @@ import android.view.View;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.db.User;
-import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
+import com.codepath.apps.restclienttemplate.util.MyApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -67,7 +67,7 @@ public class ComposeActivity extends AppCompatActivity {
         mActivity = this;
 
 //        b.progressBar.setVisibility(View.VISIBLE);
-//        SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
+//        MyApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
 //            @Override
 //            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 //                b.progressBar.setVisibility(View.GONE);
@@ -84,7 +84,7 @@ public class ComposeActivity extends AppCompatActivity {
 //                    return;
 //                }
                 String text = b.etCompose.getText().toString();
-                SimpleTweetsApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
+                MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d(LOG_TAG, "Tweet posted successfully");

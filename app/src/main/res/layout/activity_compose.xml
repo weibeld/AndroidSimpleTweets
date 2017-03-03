@@ -19,7 +19,7 @@
             android:id="@+id/tvOffline"
             style="@style/OfflineModeIndicator"
             android:layout_alignParentTop="true"
-            android:text="@string/indicator_offline"
+            android:text="@string/offline_timeline_activity"
             />
 
         <RelativeLayout
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvName"
                     android:layout_toRightOf="@id/ivProfileImage"
-                    android:text='@{user.screenName == null ? "" :  `@` + user.screenName}'
+                    android:text='@{user.screenName == null ? "" :  user.screenName}'
                     />
 
                 <!--<ProgressBar-->

@@ -9,6 +9,7 @@ import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.db.Tweet;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dw on 01/03/17.
@@ -58,6 +59,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 //        else
 //            return VIEW_TYPE_LAST;
 //    }
+
+    // Remove all items from the adapter
+    public void clear() {
+        int oldSize = mData.size();
+        mData.clear();
+        notifyItemRangeRemoved(0, oldSize);
+    }
+
+    // Append a list of items to the end of the adapter
+    public void append(List<Tweet> tweets) {
+        int oldSize = mData.size();
+        mData.addAll(tweets);
+        notifyItemRangeInserted(oldSize, tweets.size());
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 //        ImageView ivProfileImage;

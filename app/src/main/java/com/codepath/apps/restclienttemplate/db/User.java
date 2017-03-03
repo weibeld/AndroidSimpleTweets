@@ -46,7 +46,7 @@ public class User extends BaseModel implements Serializable {
         try {
             this.id = object.getLong("id");
             this.name = object.getString("name");
-            this.screenName = object.getString("screen_name");
+            this.screenName = "@" + object.getString("screen_name");
             // Provided: "mini": 24x24px, "normal": 48x48px, "bigger": 73x73px, "original": WxH
             this.profileImageUrl = object.getString("profile_image_url").replace("normal", "bigger");
         } catch (JSONException e) {

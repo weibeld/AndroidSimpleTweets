@@ -15,11 +15,11 @@ import com.raizlabs.android.dbflow.config.FlowManager;
  * including the image cache in memory and on disk. This also adds a singleton
  * for accessing the relevant rest client.
  *
- *     TwitterClient client = SimpleTweetsApplication.getTwitterClient();
+ *     TwitterClient client = MyApplication.getTwitterClient();
  *     // use client to send requests to API
  *
  */
-public class SimpleTweetsApplication extends Application {
+public class MyApplication extends Application {
 	private static Context context;
 
 	@Override
@@ -31,11 +31,11 @@ public class SimpleTweetsApplication extends Application {
 		FlowManager.init(new FlowConfig.Builder(this).build());
 		FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
 
-		SimpleTweetsApplication.context = this;
+		MyApplication.context = this;
 	}
 
 	public static TwitterClient getTwitterClient() {
-		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, SimpleTweetsApplication.context);
+		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, MyApplication.context);
 	}
 
 	public static SharedPreferences getSharedPreferences() {
