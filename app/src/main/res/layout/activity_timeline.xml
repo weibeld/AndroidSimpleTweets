@@ -10,15 +10,9 @@
 
         <TextView
             android:id="@+id/tvOffline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/indicator_offline"
-            android:background="@android:color/holo_orange_dark"
-            android:visibility="gone"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
+            style="@style/OfflineModeIndicator"
             android:layout_alignParentTop="true"
+            android:text="@string/indicator_offline"
             />
 
         <android.support.v4.widget.SwipeRefreshLayout

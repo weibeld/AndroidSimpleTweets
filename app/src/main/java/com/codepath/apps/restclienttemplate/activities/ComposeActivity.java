@@ -3,18 +3,21 @@ package com.codepath.apps.restclienttemplate.activities;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.db.User;
+import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -31,15 +34,30 @@ public class ComposeActivity extends AppCompatActivity {
     ComposeActivity mActivity;
     ActivityComposeBinding b;
     User mCurrentUser;
+    boolean mIsOfflineMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
 
-        mCurrentUser = (User) getIntent().getSerializableExtra(EXTRA_USER);
+        Intent intent = getIntent();
+        mCurrentUser = (User) intent.getSerializableExtra(EXTRA_USER);
+        mIsOfflineMode = intent.getBooleanExtra(TimelineActivity.EXTRA_IS_OFFLINE, false);
+
         b.setUser(mCurrentUser);
 
+        if (mIsOfflineMode) {
+            b.etCompose.setEnabled(false);
+            b.btnTweet.setEnabled(false);
+            SpannableString msg = new SpannableString("OFFLINE (tweeting disabled)");
+            msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
+            msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
+            b.tvOffline.setText(msg);
+            b.tvOffline.setVisibility(View.VISIBLE);
+
+
+        }
 
         ActionBar a = getSupportActionBar();
         a.setTitle(R.string.title_compose_activity);

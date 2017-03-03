@@ -3,11 +3,14 @@ package com.codepath.apps.restclienttemplate.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -40,6 +44,7 @@ import static android.content.Intent.EXTRA_USER;
 public class TimelineActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = TimelineActivity.class.getSimpleName();
+    public static final String EXTRA_IS_OFFLINE = "offline" ;
 
     ActivityTimelineBinding b;
 
@@ -50,7 +55,9 @@ public class TimelineActivity extends AppCompatActivity {
     boolean mIsPaginationEnabled = false;
     User mCurrentUser;
 
-    // TODO: disable ComposeActivity if in offline mode
+    boolean mIsOfflineMode = false;
+
+    // TODO: add logout menu item
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +103,8 @@ public class TimelineActivity extends AppCompatActivity {
                     mCurrentUser = user;
                     setAppBarSubtitle();
                     SharedPreferences.Editor e = SimpleTweetsApplication.getSharedPreferences().edit();
-                    e.putString(getString(R.string.pref_current_user), (new Gson()).toJson(mCurrentUser)).apply();
+                    e.putString(getString(R.string.pref_current_user), (new Gson()).toJson(mCurrentUser));
+                    e.apply();
                 }
             });
             enablePagination();
@@ -106,6 +114,12 @@ public class TimelineActivity extends AppCompatActivity {
         }
         // Offline mode
         else {
+            SharedPreferences prefs = SimpleTweetsApplication.getSharedPreferences();
+            long date = prefs.getLong(getString(R.string.pref_last_update), 0);
+            SpannableString msg = new SpannableString("OFFLINE (last update " + date + ")");
+            msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
+            msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
+            b.tvOffline.setText(msg);
             b.tvOffline.setVisibility(View.VISIBLE);
             ArrayList<Tweet> savedTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
             mTweets.addAll(savedTweets);
@@ -114,6 +128,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             mCurrentUser = Util.getCurrentUserFromPrefs(this);
             setAppBarSubtitle();
+            mIsOfflineMode = true;
         }
 
     }
@@ -132,7 +147,7 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    private void loadHomeTimelineTweets(int page, final boolean showProgressBar) {
+    private void loadHomeTimelineTweets(final int page, final boolean showProgressBar) {
         Log.d(LOG_TAG, "Loading page " + page);
         b.serverError.setVisibility(View.GONE);
 
@@ -149,6 +164,7 @@ public class TimelineActivity extends AppCompatActivity {
                     DbUtils.clearTables();
                     if (!mIsPaginationEnabled) enablePagination();
                     Util.hideIfShown(b.tvOffline);
+                    mIsOfflineMode = false;
                 }
                 // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
                 ArrayList<Tweet> fetchedTweets = new ArrayList<>();
@@ -164,6 +180,12 @@ public class TimelineActivity extends AppCompatActivity {
                 int oldSize = mTweets.size();
                 mTweets.addAll(fetchedTweets);
                 mAdapter.notifyItemRangeInserted(oldSize, fetchedTweets.size());
+                if (page == 1) {
+                    SharedPreferences.Editor e = SimpleTweetsApplication.getSharedPreferences().edit();
+                    long ts = GregorianCalendar.getInstance().getTimeInMillis();
+                    e.putLong(getString(R.string.pref_last_update), ts);
+                    e.apply();
+                }
                 //Util.writeToFile("log.json", response.toString());
             }
 
@@ -204,6 +226,7 @@ public class TimelineActivity extends AppCompatActivity {
             case R.id.action_compose:
                 Intent intent = new Intent(this, ComposeActivity.class);
                 intent.putExtra(EXTRA_USER, mCurrentUser);
+                intent.putExtra(EXTRA_IS_OFFLINE, mIsOfflineMode);
                 startActivity(intent);
                 return true;
         }
