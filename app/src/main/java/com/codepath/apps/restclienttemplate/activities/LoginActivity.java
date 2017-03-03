@@ -10,6 +10,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.api.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
+// TODO: can we get a reference to the authenticated user in LoginActivity (so we can pass it to TimelineActivity)?
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
 	private static final String LOG_TAG = LoginActivity.class.getSimpleName();

@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate.util;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.codepath.apps.restclienttemplate.api.TwitterClient;
 import com.facebook.stetho.Stetho;
@@ -35,5 +36,9 @@ public class SimpleTweetsApplication extends Application {
 
 	public static TwitterClient getTwitterClient() {
 		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, SimpleTweetsApplication.context);
+	}
+
+	public static SharedPreferences getSharedPreferences() {
+		return context.getSharedPreferences("main", MODE_PRIVATE);
 	}
 }

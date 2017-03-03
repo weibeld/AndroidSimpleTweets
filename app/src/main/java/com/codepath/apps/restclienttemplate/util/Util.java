@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,10 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.db.User;
+import com.google.gson.Gson;
 
 import org.apache.commons.io.FileUtils;
 
@@ -122,6 +127,13 @@ public class Util {
     public static void toggleVisibility(View v) {
         if (v.getVisibility() == View.VISIBLE) v.setVisibility(View.GONE);
         else v.setVisibility(View.VISIBLE);
+    }
+
+    public static User getCurrentUserFromPrefs(Context c) {
+        SharedPreferences prefs = SimpleTweetsApplication.getSharedPreferences();
+        Gson gson = new Gson();
+        String json = prefs.getString(c.getString(R.string.pref_current_user), gson.toJson(new User()));
+        return gson.fromJson(json, User.class);
     }
 
 }

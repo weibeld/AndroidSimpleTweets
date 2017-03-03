@@ -22,17 +22,25 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.content.Intent.EXTRA_USER;
+
 public class ComposeActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = ComposeActivity.class.getSimpleName();
 
     ComposeActivity mActivity;
     ActivityComposeBinding b;
+    User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
+
+        mCurrentUser = (User) getIntent().getSerializableExtra(EXTRA_USER);
+        b.setUser(mCurrentUser);
+
+
         ActionBar a = getSupportActionBar();
         a.setTitle(R.string.title_compose_activity);
         a.setDisplayHomeAsUpEnabled(true);
@@ -40,15 +48,15 @@ public class ComposeActivity extends AppCompatActivity {
 
         mActivity = this;
 
-        b.progressBar.setVisibility(View.VISIBLE);
-        SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                b.progressBar.setVisibility(View.GONE);
-                User user = new User(response);
-                b.setUser(user);
-            }
-        });
+//        b.progressBar.setVisibility(View.VISIBLE);
+//        SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                b.progressBar.setVisibility(View.GONE);
+//                User user = new User(response);
+//                b.setUser(user);
+//            }
+//        });
 
         b.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override

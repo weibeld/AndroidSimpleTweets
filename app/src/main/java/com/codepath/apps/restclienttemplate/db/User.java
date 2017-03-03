@@ -15,24 +15,26 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by dw on 01/03/17.
  */
 @Table(database = MyDatabase.class)
-public class User extends BaseModel {
+public class User extends BaseModel implements Serializable {
 
     @PrimaryKey
     @Column
     public Long id;
 
     @Column
-    public String name;
+    public String name = "";
 
     @Column
-    public String screenName;
+    public String screenName = "";
 
     @Column
-    public String profileImageUrl;
+    public String profileImageUrl = "";
 
     // Empty default constructor (required by DBFlow)
     public User() {

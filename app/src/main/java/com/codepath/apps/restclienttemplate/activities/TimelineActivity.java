@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,9 +19,11 @@ import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.db.DbUtils;
 import com.codepath.apps.restclienttemplate.db.Tweet;
 import com.codepath.apps.restclienttemplate.db.Tweet_Table;
+import com.codepath.apps.restclienttemplate.db.User;
 import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -31,6 +34,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+
+import static android.content.Intent.EXTRA_USER;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -43,9 +48,9 @@ public class TimelineActivity extends AppCompatActivity {
     TweetAdapter mAdapter;
     LinearLayoutManager mLayoutManager;
     boolean mIsPaginationEnabled = false;
+    User mCurrentUser;
 
-    // TODO: get currently authenticated user and save it as a field; display username in app bar and pass User to ComposeActivity
-    // TODO: save currently authenticated user in separate table in database (so that it can be restored if offline)
+    // TODO: disable ComposeActivity if in offline mode
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,9 @@ public class TimelineActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Internet available");
         else
             Log.d(LOG_TAG, "No internet connection");
+
+        getSupportActionBar().setTitle("Simple Tweets");
+        getSupportActionBar().setSubtitle(" ");
 
         mTweets = new ArrayList<>();
         mAdapter = new TweetAdapter(mTweets, this);
@@ -80,6 +88,17 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Normal (online) mode
         if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection()) {
+            SimpleTweetsApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    b.progressBar.setVisibility(View.GONE);
+                    User user = new User(response);
+                    mCurrentUser = user;
+                    setAppBarSubtitle();
+                    SharedPreferences.Editor e = SimpleTweetsApplication.getSharedPreferences().edit();
+                    e.putString(getString(R.string.pref_current_user), (new Gson()).toJson(mCurrentUser)).apply();
+                }
+            });
             enablePagination();
             DbUtils.clearTables();
             loadHomeTimelineTweets(1, true);
@@ -87,14 +106,20 @@ public class TimelineActivity extends AppCompatActivity {
         }
         // Offline mode
         else {
-            // TODO: indicate offline mode (e.g. text or icon in app bar)
             b.tvOffline.setVisibility(View.VISIBLE);
             ArrayList<Tweet> savedTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
             mTweets.addAll(savedTweets);
             mAdapter.notifyItemRangeInserted(0, savedTweets.size());
             //Util.toastLong(this, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
 
+            mCurrentUser = Util.getCurrentUserFromPrefs(this);
+            setAppBarSubtitle();
         }
+
+    }
+
+    private void setAppBarSubtitle() {
+        getSupportActionBar().setSubtitle("@" + mCurrentUser.screenName + "'s home timeline");
     }
 
     private void enablePagination() {
@@ -177,8 +202,9 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_compose:
-                Intent i = new Intent(this, ComposeActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(this, ComposeActivity.class);
+                intent.putExtra(EXTRA_USER, mCurrentUser);
+                startActivity(intent);
                 return true;
         }
         return false;

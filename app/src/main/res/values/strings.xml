@@ -7,5 +7,6 @@
     <string name="button_tweet">Tweet</string>
     <string name="hint_edit_text">Twitter here…</string>
     <string name="indicator_offline">OFFLINE (refresh to go online)</string>
+    <string name="pref_current_user">pref_current_user</string>
 
 </resources>

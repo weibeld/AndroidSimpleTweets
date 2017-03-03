@@ -71,4 +71,7 @@ dependencies {
     // Stetho (for SQLite database inspection)
     compile 'com.facebook.stetho:stetho:1.4.2'
 
+    // Gson
+    compile 'com.google.code.gson:gson:2.7'
+
 }
