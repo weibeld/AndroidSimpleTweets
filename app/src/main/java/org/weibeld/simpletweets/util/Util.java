@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.util;
+package org.weibeld.simpletweets.util;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,11 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.db.User;
 import com.google.gson.Gson;
 
 import org.apache.commons.io.FileUtils;
+import org.weibeld.simpletweets.R;
+import org.weibeld.simpletweets.db.User;
 
 import java.io.File;
 import java.io.IOException;

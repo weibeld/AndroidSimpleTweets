@@ -1,12 +1,12 @@
-package com.codepath.apps.restclienttemplate.adapters;
+package org.weibeld.simpletweets.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
-import com.codepath.apps.restclienttemplate.db.Tweet;
+import org.weibeld.simpletweets.databinding.ItemTweetBinding;
+import org.weibeld.simpletweets.db.Tweet;
 
 import java.util.ArrayList;
 import java.util.List;

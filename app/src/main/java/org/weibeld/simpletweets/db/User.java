@@ -1,10 +1,9 @@
-package com.codepath.apps.restclienttemplate.db;
+package org.weibeld.simpletweets.db;
 
 import android.databinding.BindingAdapter;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -14,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.weibeld.simpletweets.R;
 
 import java.io.Serializable;
 

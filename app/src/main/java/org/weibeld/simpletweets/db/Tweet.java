@@ -1,9 +1,9 @@
-package com.codepath.apps.restclienttemplate.db;
+package org.weibeld.simpletweets.db;
 
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
 
-import com.codepath.apps.restclienttemplate.util.Util;
+import org.weibeld.simpletweets.util.Util;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;

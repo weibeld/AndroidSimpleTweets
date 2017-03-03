@@ -1,13 +1,14 @@
-package com.codepath.apps.restclienttemplate.activities;
+package org.weibeld.simpletweets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.api.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+
+import org.weibeld.simpletweets.R;
+import org.weibeld.simpletweets.api.TwitterClient;
 
 // TODO: can we get a reference to the authenticated user in LoginActivity (so we can pass it to TimelineActivity)?
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {

@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.activities;
+package org.weibeld.simpletweets.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,16 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
-import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
-import com.codepath.apps.restclienttemplate.db.DbUtils;
-import com.codepath.apps.restclienttemplate.db.Tweet;
-import com.codepath.apps.restclienttemplate.db.Tweet_Table;
-import com.codepath.apps.restclienttemplate.db.User;
-import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.restclienttemplate.util.MyApplication;
-import com.codepath.apps.restclienttemplate.util.Util;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -32,6 +22,16 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.weibeld.simpletweets.R;
+import org.weibeld.simpletweets.adapters.TweetAdapter;
+import org.weibeld.simpletweets.databinding.ActivityTimelineBinding;
+import org.weibeld.simpletweets.db.DbUtils;
+import org.weibeld.simpletweets.db.Tweet;
+import org.weibeld.simpletweets.db.Tweet_Table;
+import org.weibeld.simpletweets.db.User;
+import org.weibeld.simpletweets.util.EndlessRecyclerViewScrollListener;
+import org.weibeld.simpletweets.util.MyApplication;
+import org.weibeld.simpletweets.util.Util;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;

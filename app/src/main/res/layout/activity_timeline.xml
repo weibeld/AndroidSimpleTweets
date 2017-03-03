@@ -6,7 +6,7 @@
         android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.codepath.apps.restclienttemplate.activities.TimelineActivity">
+        tools:context="com.codepath.apps.restclienttemplate.com.weibeld.simpletweets.activities.TimelineActivity">
 
         <TextView
             android:id="@+id/tvOffline"

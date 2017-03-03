@@ -7,7 +7,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="user" type="com.codepath.apps.restclienttemplate.db.User"/>
+        <variable name="user" type="org.weibeld.simpletweets.db.User"/>
     </data>
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="com.codepath.apps.restclienttemplate.activities.ComposeActivity">
+            tools:context="org.weibeld.simpletweets.activities.ComposeActivity">
 
             <RelativeLayout
                 android:id="@+id/userLayout"

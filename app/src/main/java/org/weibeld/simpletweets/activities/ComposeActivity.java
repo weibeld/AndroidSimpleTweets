@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.activities;
+package org.weibeld.simpletweets.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -13,14 +13,14 @@ import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.view.View;
 
-import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
-import com.codepath.apps.restclienttemplate.db.User;
-import com.codepath.apps.restclienttemplate.util.MyApplication;
-import com.codepath.apps.restclienttemplate.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.weibeld.simpletweets.R;
+import org.weibeld.simpletweets.databinding.ActivityComposeBinding;
+import org.weibeld.simpletweets.db.User;
+import org.weibeld.simpletweets.util.MyApplication;
+import org.weibeld.simpletweets.util.Util;
 
 import cz.msebera.android.httpclient.Header;
 

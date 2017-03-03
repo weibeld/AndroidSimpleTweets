@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.db;
+package org.weibeld.simpletweets.db;
 
 /**
  * Created by dw on 03/03/17.

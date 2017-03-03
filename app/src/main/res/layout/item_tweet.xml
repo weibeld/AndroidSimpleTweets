@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="tweet" type="com.codepath.apps.restclienttemplate.db.Tweet"/>
+        <variable name="tweet" type="org.weibeld.simpletweets.db.Tweet"/>
     </data>
 
     <RelativeLayout

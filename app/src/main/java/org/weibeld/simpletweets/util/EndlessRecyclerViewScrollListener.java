@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.util;
+package org.weibeld.simpletweets.util;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

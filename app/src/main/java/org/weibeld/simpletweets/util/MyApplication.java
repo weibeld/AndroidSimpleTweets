@@ -1,10 +1,10 @@
-package com.codepath.apps.restclienttemplate.util;
+package org.weibeld.simpletweets.util;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.codepath.apps.restclienttemplate.api.TwitterClient;
+import org.weibeld.simpletweets.api.TwitterClient;
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;

@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.db;
+package org.weibeld.simpletweets.db;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.api;
+package org.weibeld.simpletweets.api;
 
 import android.content.Context;
 import android.util.Log;
