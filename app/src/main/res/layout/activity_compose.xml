@@ -19,7 +19,7 @@
             android:id="@+id/tvOffline"
             style="@style/OfflineModeIndicator"
             android:layout_alignParentTop="true"
-            android:text="@string/offline_timeline_activity"
+            android:text="@string/offline_timeline"
             />
 
         <RelativeLayout
@@ -68,15 +68,6 @@
                     android:text='@{user.screenName == null ? "" :  user.screenName}'
                     />
 
-                <!--<ProgressBar-->
-                    <!--android:id="@+id/progressBar"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:indeterminate="true"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--/>-->
-
             </RelativeLayout>
 
             <EditText
@@ -96,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:text="@string/button_tweet"
+                android:text="@string/btn_publish"
                 />
 
             <TextView

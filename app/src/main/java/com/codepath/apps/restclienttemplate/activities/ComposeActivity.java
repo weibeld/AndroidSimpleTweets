@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.R;
@@ -31,8 +30,9 @@ public class ComposeActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = ComposeActivity.class.getSimpleName();
 
-    ComposeActivity mActivity;
     ActivityComposeBinding b;
+
+    ComposeActivity mActivity;
     User mCurrentUser;
     boolean mIsOfflineMode;
 
@@ -41,74 +41,53 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
 
+        mActivity = this;
+
         Intent intent = getIntent();
         mCurrentUser = (User) intent.getSerializableExtra(EXTRA_USER);
         mIsOfflineMode = intent.getBooleanExtra(TimelineActivity.EXTRA_IS_OFFLINE, false);
 
         b.setUser(mCurrentUser);
 
-        if (mIsOfflineMode) {
-            b.etCompose.setEnabled(false);
-            b.btnTweet.setEnabled(false);
-            SpannableString msg = new SpannableString("OFFLINE (tweeting disabled)");
-            msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
-            msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
-            b.tvOffline.setText(msg);
-            b.tvOffline.setVisibility(View.VISIBLE);
-
-
-        }
-
         ActionBar a = getSupportActionBar();
         a.setTitle(R.string.title_compose_activity);
         a.setDisplayHomeAsUpEnabled(true);
         a.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
-        mActivity = this;
+        // Enable offline mode (note: ComposeActivity can't transition from offline to online mode)
+        if (mIsOfflineMode) {
+            // Disable input widgets
+            b.etCompose.setEnabled(false);
+            b.btnTweet.setEnabled(false);
+            // Display offline mode indicator
+            SpannableString msg = new SpannableString(getString(R.string.offline_compose));
+            msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
+            msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
+            b.tvOffline.setText(msg);
+            b.tvOffline.setVisibility(View.VISIBLE);
+        }
 
-//        b.progressBar.setVisibility(View.VISIBLE);
-//        MyApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                b.progressBar.setVisibility(View.GONE);
-//                User user = new User(response);
-//                b.setUser(user);
-//            }
-//        });
-
+        // On clicking button "Tweet"
         b.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!(Util.hasActiveNetworkInterface(mActivity) && Util.hasInternetConnection())) {
-//                    Util.toastLong(mActivity, "It seems you have no internet connection. Please connect your device to the Internet and try again.");
-//                    return;
-//                }
                 String text = b.etCompose.getText().toString();
                 MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Log.d(LOG_TAG, "Tweet posted successfully");
-                        Util.toast(mActivity, "Tweet posted");
+                        Util.toast(mActivity, getString(R.string.toast_tweet_posted));
                         startActivity(new Intent(mActivity, TimelineActivity.class));
                     }
-
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        String msg = "Couldn't publish tweet:\n";
-                        if (errorResponse == null)
-                            msg += throwable.getClass().getSimpleName();
-                        // TODO: check error response spec of Twitter and extract and display the error messages of the JSON response
-                        else
-                            msg += errorResponse.toString() + "\n(" +  throwable.getClass().getSimpleName() + ")";
-                        Util.toastLong(mActivity, msg);
-                        Log.d(LOG_TAG, msg);
+                        Util.toastLong(mActivity, getString(R.string.toast_error_publish));
                         throwable.printStackTrace();
                     }
                 });
             }
         });
 
-        // Count number of entered characters and display it in the character count TextView
+        // Character count
         b.etCompose.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

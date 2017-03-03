@@ -10,18 +10,6 @@ import com.loopj.android.http.RequestParams;
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
-/*
- * 
- * This is the object responsible for communicating with a REST API. 
- * Specify the constants below to change the API being communicated with.
- * See a full list of supported API classes: 
- *   https://github.com/fernandezpablo85/scribe-java/tree/master/src/main/java/org/scribe/builder/api
- * Key and Secret are provided by the developer site for the given API i.e dev.twitter.com
- * Add methods for each relevant endpoint in the API.
- * 
- * NOTE: You may want to rename this object based on the service i.e TwitterClient or FlickrClient
- * 
- */
 public class TwitterClient extends OAuthBaseClient {
 
     private static final String LOG_TAG = TwitterClient.class.getSimpleName();
@@ -65,41 +53,37 @@ public class TwitterClient extends OAuthBaseClient {
 
 
 
-
-
-
-
-    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
-        Log.d(LOG_TAG, "getMentionsTimeline");
-        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
-        Log.d(LOG_TAG, "Api Url:" + apiUrl);
-        if (params != null) {
-            Log.d(LOG_TAG, "RequestParams:" + params.toString());
-        }
-        client.get(apiUrl, params, handler);
-    }
-
-    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
-        Log.d(LOG_TAG, "getUserTimeline");
-        String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
-        Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
-        client.get(currentUserApiUrl, params, handler);
-    }
-
-    public void getUserInfo(AsyncHttpResponseHandler handler, long uid) {
-        Log.d(LOG_TAG, "getUserInfo");
-        String userApiUrl = getApiUrl("users/show.json");
-        RequestParams params = new RequestParams();
-        params.put("user_id", String.valueOf(uid));
-        client.get(userApiUrl, params, handler);
-    }
-
-    public void getUserInfo(AsyncHttpResponseHandler handler, String screen_name) {
-        Log.d(LOG_TAG, "getUserInfo");
-        String userApiUrl = getApiUrl("users/show.json");
-        RequestParams params = new RequestParams();
-        params.put("screen_name", screen_name);
-        client.get(userApiUrl, params, handler);
-    }
+//    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+//        Log.d(LOG_TAG, "getMentionsTimeline");
+//        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+//        Log.d(LOG_TAG, "Api Url:" + apiUrl);
+//        if (params != null) {
+//            Log.d(LOG_TAG, "RequestParams:" + params.toString());
+//        }
+//        client.get(apiUrl, params, handler);
+//    }
+//
+//    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+//        Log.d(LOG_TAG, "getUserTimeline");
+//        String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
+//        Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
+//        client.get(currentUserApiUrl, params, handler);
+//    }
+//
+//    public void getUserInfo(AsyncHttpResponseHandler handler, long uid) {
+//        Log.d(LOG_TAG, "getUserInfo");
+//        String userApiUrl = getApiUrl("users/show.json");
+//        RequestParams params = new RequestParams();
+//        params.put("user_id", String.valueOf(uid));
+//        client.get(userApiUrl, params, handler);
+//    }
+//
+//    public void getUserInfo(AsyncHttpResponseHandler handler, String screen_name) {
+//        Log.d(LOG_TAG, "getUserInfo");
+//        String userApiUrl = getApiUrl("users/show.json");
+//        RequestParams params = new RequestParams();
+//        params.put("screen_name", screen_name);
+//        client.get(userApiUrl, params, handler);
+//    }
 
 }

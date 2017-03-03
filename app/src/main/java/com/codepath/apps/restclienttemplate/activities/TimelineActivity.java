@@ -99,8 +99,9 @@ public class TimelineActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Util.toastLong(mActivity, getString(R.string.server_error));
+                    Util.toastLong(mActivity, getString(R.string.toast_error_timeline));
                     mCurrentUser = new User();  // Create empty fake user
+                    throwable.printStackTrace();
                 }
             });
             b.recyclerView.addOnScrollListener(mScrollListener);
@@ -124,7 +125,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Set up offline indicator
         SharedPreferences prefs = MyApplication.getSharedPreferences();
         long ts = prefs.getLong(getString(R.string.pref_last_update), 0);
-        String text = String.format(getString(R.string.offline_timeline_activity), ts + "");
+        String text = String.format(getString(R.string.offline_timeline), ts + "");
         SpannableString msg = new SpannableString(text);
         msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
         msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
@@ -187,7 +188,8 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // Turn off progress bar or pull-to-refresh wheel
                 turnOffLoadingIndicator();
-                Util.toastLong(mActivity, getString(R.string.server_error));
+                Util.toastLong(mActivity, getString(R.string.toast_error_timeline));
+                throwable.printStackTrace();
             }
 
             private void turnOffLoadingIndicator() {

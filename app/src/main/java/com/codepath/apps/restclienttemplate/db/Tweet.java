@@ -40,7 +40,7 @@ public class Tweet extends BaseModel {
 		super();
 	}
 
-    // Constructor for creating a Tweet from the returned JSON object of a tweet (status)
+    // Create a tweet from the "status" object returned by Twitter API (as an array of "statuses")
 	public Tweet(JSONObject object){
 		super();
 		try {
@@ -51,26 +51,15 @@ public class Tweet extends BaseModel {
 		} catch (JSONException e) { e.printStackTrace(); }
 	}
 
-    @BindingAdapter({"bind:relativeTimestamp"})
-    public static void setRelativeTimestamp(TextView tv, String createdAt) {
-        tv.setText(Util.getRelativeTimeAgo(createdAt));
-    }
-
     // Delete all rows of this table
     public static void clearTable() {
         SQLite.delete().from(Tweet.class).query();
     }
 
-    /* The where class in this code below will be marked red until you first compile the project, since the code
-	 * for the SampleModel_Table class is generated at compile-time.
-	 */
-	
-	// Record Finders
-//	public static Tweet byId(long id) {
-//		return new Select().from(Tweet.class).where(Tweet_Table.id.eq(id)).querySingle();
-//	}
-//
-//	public static List<Tweet> recentItems() {
-//		return new Select().from(Tweet.class).orderBy(Tweet_Table.id, false).limit(300).queryList();
-//	}
+	// Claculate the relative timestamp of the passed time and set it to the passed TextView
+	@BindingAdapter({"bind:relativeTimestamp"})
+	public static void setRelativeTimestamp(TextView tv, String createdAt) {
+		tv.setText(Util.getRelativeTimeAgo(createdAt));
+	}
+
 }

@@ -19,10 +19,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     private static final String LOG_TAG = TweetAdapter.class.getSimpleName();
 
-//    private static final int VIEW_TYPE_REGULAR = 0;
-//    private static final int VIEW_TYPE_LAST = 1;
-
-
     Context mContext;
     ArrayList<Tweet> mData;
 
@@ -52,14 +48,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return mData.size();
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        if (position < mData.size()-1)
-//            return VIEW_TYPE_REGULAR;
-//        else
-//            return VIEW_TYPE_LAST;
-//    }
-
     // Remove all items from the adapter
     public void clear() {
         int oldSize = mData.size();
@@ -74,29 +62,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         notifyItemRangeInserted(oldSize, tweets.size());
     }
 
+
     class ViewHolder extends RecyclerView.ViewHolder {
-//        ImageView ivProfileImage;
-//        TextView tvUsername;
-//        TextView tvText;
-
         private ItemTweetBinding b;
-
-        // Create a viewHolder for the passed view (item view)
-//        ViewHolder(View view) {
-//            super(view);
-//            ivProfileImage = (ImageView) view.findViewById(R.id.ivProfileImage);
-//            tvUsername = (TextView) view.findViewById(R.id.tvUsername);
-//            tvText = (TextView) view.findViewById(R.id.tvText);
-//        }
         ViewHolder(ItemTweetBinding binding) {
             super(binding.getRoot());
             b = binding;
         }
-
         ItemTweetBinding getBinding() {
             return b;
         }
-
-
     }
 }

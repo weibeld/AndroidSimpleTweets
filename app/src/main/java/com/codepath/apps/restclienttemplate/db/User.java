@@ -41,6 +41,7 @@ public class User extends BaseModel implements Serializable {
         super();
     }
 
+    // Create a user from the "user" JSON object returned by the Twitter API
     public User(JSONObject object) {
         super();
         try {
@@ -59,6 +60,7 @@ public class User extends BaseModel implements Serializable {
         SQLite.delete().from(Tweet.class).query();
     }
 
+    // Load the profile image of a user into the passed ImageView
     @BindingAdapter({"bind:imageUrl"})
     public static void loadImage(ImageView view, String url) {
         Log.d("User", "Loading image " + url);
