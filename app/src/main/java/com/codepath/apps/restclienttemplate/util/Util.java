@@ -111,6 +111,14 @@ public class Util {
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
+    public static void showIfHidden(View v) {
+        if (v.getVisibility() == View.GONE) v.setVisibility(View.VISIBLE);
+    }
+
+    public static void hideIfShown(View v) {
+        if (v.getVisibility() == View.VISIBLE) v.setVisibility(View.GONE);
+    }
+
     public static void toggleVisibility(View v) {
         if (v.getVisibility() == View.VISIBLE) v.setVisibility(View.GONE);
         else v.setVisibility(View.VISIBLE);

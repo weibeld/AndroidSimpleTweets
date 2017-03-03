@@ -6,5 +6,6 @@
     <string name="title_compose_activity">Compose Tweet</string>
     <string name="button_tweet">Tweet</string>
     <string name="hint_edit_text">Twitter here…</string>
+    <string name="indicator_offline">OFFLINE (refresh to go online)</string>
 
 </resources>

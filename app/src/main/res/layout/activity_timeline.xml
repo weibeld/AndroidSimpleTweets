@@ -8,10 +8,24 @@
         android:layout_height="match_parent"
         tools:context="com.codepath.apps.restclienttemplate.activities.TimelineActivity">
 
+        <TextView
+            android:id="@+id/tvOffline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/indicator_offline"
+            android:background="@android:color/holo_orange_dark"
+            android:visibility="visible"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:layout_alignParentTop="true"
+            />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvOffline">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

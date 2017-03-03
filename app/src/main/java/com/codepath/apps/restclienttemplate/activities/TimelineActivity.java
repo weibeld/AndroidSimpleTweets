@@ -15,9 +15,9 @@ import android.view.View;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetAdapter;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
+import com.codepath.apps.restclienttemplate.db.DbUtils;
 import com.codepath.apps.restclienttemplate.db.Tweet;
 import com.codepath.apps.restclienttemplate.db.Tweet_Table;
-import com.codepath.apps.restclienttemplate.db.User;
 import com.codepath.apps.restclienttemplate.util.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.util.SimpleTweetsApplication;
 import com.codepath.apps.restclienttemplate.util.Util;
@@ -81,12 +81,14 @@ public class TimelineActivity extends AppCompatActivity {
         // Normal (online) mode
         if (Util.hasActiveNetworkInterface(this) && Util.hasInternetConnection()) {
             enablePagination();
+            DbUtils.clearTables();
             loadHomeTimelineTweets(1, true);
 
         }
         // Offline mode
         else {
             // TODO: indicate offline mode (e.g. text or icon in app bar)
+            b.tvOffline.setVisibility(View.VISIBLE);
             ArrayList<Tweet> savedTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
             mTweets.addAll(savedTweets);
             mAdapter.notifyItemRangeInserted(0, savedTweets.size());
@@ -119,10 +121,9 @@ public class TimelineActivity extends AppCompatActivity {
                     int oldSize = mTweets.size();
                     mTweets.clear();
                     mAdapter.notifyItemRangeRemoved(0, oldSize);
-                    // Delete all tweets from the database
-                    Tweet.clearTable();
-                    User.clearTable();
+                    DbUtils.clearTables();
                     if (!mIsPaginationEnabled) enablePagination();
+                    Util.hideIfShown(b.tvOffline);
                 }
                 // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
                 ArrayList<Tweet> fetchedTweets = new ArrayList<>();
