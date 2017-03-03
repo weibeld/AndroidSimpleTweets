@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,12 +65,7 @@ public class TimelineActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
-        b.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadTweets(1, true);
-            }
-        });
+        b.swipeContainer.setOnRefreshListener(() -> loadTweets(1, true));
         b.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
         mScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {

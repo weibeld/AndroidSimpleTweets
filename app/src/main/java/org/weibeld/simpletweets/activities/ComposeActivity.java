@@ -68,23 +68,20 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         // On clicking button "Tweet"
-        b.btnTweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = b.etCompose.getText().toString();
-                MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Util.toast(mActivity, getString(R.string.toast_tweet_posted));
-                        startActivity(new Intent(mActivity, TimelineActivity.class));
-                    }
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Util.toastLong(mActivity, getString(R.string.toast_error_publish));
-                        throwable.printStackTrace();
-                    }
-                });
-            }
+        b.btnTweet.setOnClickListener(v -> {
+            String text = b.etCompose.getText().toString();
+            MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Util.toast(mActivity, getString(R.string.toast_tweet_posted));
+                    startActivity(new Intent(mActivity, TimelineActivity.class));
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Util.toastLong(mActivity, getString(R.string.toast_error_publish));
+                    throwable.printStackTrace();
+                }
+            });
         });
 
         // Character count
