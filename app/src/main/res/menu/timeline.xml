@@ -10,4 +10,10 @@
         app:showAsAction="ifRoom"
         />
 
+    <item
+        android:id="@+id/action_logout"
+        android:title="Sign Out"
+        app:showAsAction="never"
+        />
+
 </menu>

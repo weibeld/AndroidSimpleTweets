@@ -229,6 +229,11 @@ public class TimelineActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_IS_OFFLINE, mIsOfflineMode);
                 startActivity(intent);
                 return true;
+            case R.id.action_logout:
+                SimpleTweetsApplication.getTwitterClient().clearAccessToken();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();  // Destroy this activity so that it's not kept on the back stack
+                return true;
         }
         return false;
     }
