@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import static com.loopj.android.http.AsyncHttpClient.LOG_TAG;
@@ -144,6 +145,18 @@ public class Util {
     public static void hideKeyboard(Activity a, EditText et) {
         InputMethodManager imm = (InputMethodManager) a.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    public static boolean isToday(Calendar date) {
+        Calendar today = Calendar.getInstance();
+        return date.get(Calendar.ERA) == today.get(Calendar.ERA)
+                && date.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                && date.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static boolean isYesterday(Calendar date) {
+        date.add(Calendar.DATE, 1);
+        return isToday(date);
     }
 
 }

@@ -33,8 +33,12 @@ import org.weibeld.simpletweets.util.EndlessRecyclerViewScrollListener;
 import org.weibeld.simpletweets.util.MyApplication;
 import org.weibeld.simpletweets.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -54,6 +58,9 @@ public class TimelineActivity extends AppCompatActivity {
     User mCurrentUser;
     EndlessRecyclerViewScrollListener mScrollListener;
     boolean mIsOfflineMode = false;
+    SimpleDateFormat mFormatAnyDay = new SimpleDateFormat("d MMM yyyy HH:mm", Locale.UK);
+    SimpleDateFormat mFormatToday = new SimpleDateFormat("'today at' HH:mm", Locale.UK);
+    SimpleDateFormat mFormatYesterday = new SimpleDateFormat("'yesterday at' HH:mm", Locale.UK);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +75,7 @@ public class TimelineActivity extends AppCompatActivity {
         b.recyclerView.setLayoutManager(mLayoutManager);
         b.recyclerView.addItemDecoration(new SpacingItemDecoration(26));
         b.swipeContainer.setOnRefreshListener(() -> loadTweets(1, true));
-        b.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+        b.swipeContainer.setColorSchemeResources(R.color.twitterStrong, R.color.twitterLight);
 
         mScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
@@ -120,8 +127,17 @@ public class TimelineActivity extends AppCompatActivity {
     private void enableOfflineMode() {
         // Set up offline indicator
         SharedPreferences prefs = MyApplication.getSharedPreferences();
-        long ts = prefs.getLong(getString(R.string.pref_last_update), 0);
-        String text = String.format(getString(R.string.offline_timeline), ts + "");
+        Long ts = prefs.getLong(getString(R.string.pref_last_update), 0);
+        Calendar date = GregorianCalendar.getInstance();
+        date.setTimeInMillis(ts);
+        String dateStr;
+        if (Util.isToday(date))
+            dateStr = mFormatToday.format(new Date(ts));
+        else if (Util.isYesterday(date))
+            dateStr = mFormatYesterday.format(new Date(ts));
+        else
+            dateStr = mFormatAnyDay.format(new Date(ts));
+        String text = String.format(getString(R.string.offline_timeline), dateStr);
         SpannableString msg = new SpannableString(text);
         msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
         msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);

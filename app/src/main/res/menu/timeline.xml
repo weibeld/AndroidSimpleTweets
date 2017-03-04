@@ -5,14 +5,14 @@
 
     <item
         android:id="@+id/action_compose"
-        android:title="Compose Tweet"
+        android:title="@string/action_compose"
         android:icon="@drawable/ic_feather_white_24dp"
         app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/action_logout"
-        android:title="Sign Out"
+        android:title="@string/action_logout"
         app:showAsAction="never"
         />
 

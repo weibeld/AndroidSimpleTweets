@@ -14,5 +14,7 @@
     <string name="toast_error_timeline">There was a problem getting data from the server. Please try again later.</string>
     <string name="toast_tweet_posted">Tweet posted</string>
     <string name="toast_error_publish">There was an error publishing your tweet. Please try again later.</string>
+    <string name="action_logout">Log Out</string>
+    <string name="action_compose">Compose Tweet</string>
 
 </resources>
