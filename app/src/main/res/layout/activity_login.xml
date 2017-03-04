@@ -23,7 +23,6 @@
         android:paddingBottom="18dp"
         android:onClick="loginToRest"
         android:text="@string/login_label"
-        android:foreground="?attr/selectableItemBackground"
         />
 
     <ImageView

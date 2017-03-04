@@ -131,7 +131,6 @@
                     android:text="@string/btn_publish"
                     android:layout_marginRight="3dp"
                     style="@style/TwitterButton"
-                    android:foreground="?attr/selectableItemBackground"
                     />
 
             </LinearLayout>

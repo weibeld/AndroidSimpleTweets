@@ -38,9 +38,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 		e.printStackTrace();
 	}
 
-	// Click handler method for the button used to start OAuth flow
+	// Click handler method for the button_background used to start OAuth flow
 	// Uses the client to initiate OAuth authorization
-	// This should be tied to a button used to login
+	// This should be tied to a button_background used to login
 	public void loginToRest(View view) {
 		getClient().connect();
 	}

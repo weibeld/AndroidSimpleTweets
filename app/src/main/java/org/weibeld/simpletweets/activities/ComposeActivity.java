@@ -67,7 +67,7 @@ public class ComposeActivity extends AppCompatActivity {
             b.tvOffline.setVisibility(View.VISIBLE);
         }
 
-        // On clicking button "Tweet"
+        // On clicking button_background "Tweet"
         b.btnTweet.setOnClickListener(v -> {
             String text = b.etCompose.getText().toString();
             MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
