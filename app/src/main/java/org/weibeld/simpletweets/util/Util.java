@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.db.User;
 
@@ -157,6 +159,16 @@ public class Util {
     public static boolean isYesterday(Calendar date) {
         date.add(Calendar.DATE, 1);
         return isToday(date);
+    }
+
+    // Extract the message of the first error from a Twitter API error response JSON object
+    public static String extractJsonErrorMsg(JSONObject errorResponse) {
+        String msg = null;
+        try {
+            JSONObject error = (JSONObject) errorResponse.getJSONArray("errors").get(0);
+            msg = error.getString("message");
+        } catch (JSONException e) { e.printStackTrace(); }
+        return msg;
     }
 
 }

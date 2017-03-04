@@ -102,7 +102,12 @@ public class TimelineActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Util.toastLong(mActivity, getString(R.string.toast_error_timeline));
+                    if (errorResponse != null) {
+                        String errorMsg = Util.extractJsonErrorMsg(errorResponse);
+                        Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_timeline_user), errorMsg));
+                    }
+                    else
+                        Util.toastLong(mActivity, getString(R.string.toast_network_error_timeline));
                     mCurrentUser = new User();  // Create empty fake user
                     throwable.printStackTrace();
                 }
@@ -207,7 +212,12 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // Turn off progress bar or pull-to-refresh wheel
                 turnOffLoadingIndicator();
-                Util.toastLong(mActivity, getString(R.string.toast_error_timeline));
+                if (errorResponse != null) {
+                    String errorMsg = Util.extractJsonErrorMsg(errorResponse);
+                    Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_timeline_tweets), errorMsg));
+                }
+                else
+                    Util.toastLong(mActivity, getString(R.string.toast_network_error_timeline));
                 throwable.printStackTrace();
             }
 

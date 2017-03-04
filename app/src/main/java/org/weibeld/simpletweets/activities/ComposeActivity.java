@@ -67,11 +67,11 @@ public class ComposeActivity extends AppCompatActivity {
             b.tvOffline.setVisibility(View.VISIBLE);
         }
 
-        // On clicking button_background "Tweet"
+        // On clicking button "Tweet"
         b.btnTweet.setOnClickListener(v -> {
             String text = b.etCompose.getText().toString();
             if (text.isEmpty()) {
-                Util.toast(mActivity, "Please enter some text.");
+                Util.toast(mActivity, getString(R.string.toast_enter_text));
                 return;
             }
             MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
@@ -83,7 +83,12 @@ public class ComposeActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Util.toastLong(mActivity, getString(R.string.toast_error_publish));
+                    if (errorResponse != null) {
+                        String errorMsg = Util.extractJsonErrorMsg(errorResponse);
+                        Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
+                    }
+                    else
+                        Util.toastLong(mActivity, getString(R.string.toast_network_error_compose));
                     throwable.printStackTrace();
                 }
             });
