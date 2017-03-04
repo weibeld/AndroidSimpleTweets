@@ -70,6 +70,10 @@ public class ComposeActivity extends AppCompatActivity {
         // On clicking button_background "Tweet"
         b.btnTweet.setOnClickListener(v -> {
             String text = b.etCompose.getText().toString();
+            if (text.isEmpty()) {
+                Util.toast(mActivity, "Please enter some text.");
+                return;
+            }
             MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
