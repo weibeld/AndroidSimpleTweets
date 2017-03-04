@@ -81,4 +81,8 @@ dependencies {
     // Gson
     compile 'com.google.code.gson:gson:2.7'
 
+    // For FloatingActionButton
+    compile 'com.android.support:design:25.2.0'
+
+
 }

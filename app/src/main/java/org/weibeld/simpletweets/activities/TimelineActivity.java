@@ -117,6 +117,13 @@ public class TimelineActivity extends AppCompatActivity {
             setAppBarSubtitle();
             enableOfflineMode();
         }
+
+        b.fab.setOnClickListener(v -> {
+            Intent intent = new Intent(mActivity, ComposeActivity.class);
+            intent.putExtra(EXTRA_USER, mCurrentUser);
+            intent.putExtra(EXTRA_IS_OFFLINE, mIsOfflineMode);
+            startActivity(intent);
+        });
     }
 
     private void setAppBarSubtitle() {
@@ -220,12 +227,6 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_compose:
-                Intent intent = new Intent(this, ComposeActivity.class);
-                intent.putExtra(EXTRA_USER, mCurrentUser);
-                intent.putExtra(EXTRA_IS_OFFLINE, mIsOfflineMode);
-                startActivity(intent);
-                return true;
             case R.id.action_logout:
                 MyApplication.getTwitterClient().clearAccessToken();
                 startActivity(new Intent(this, LoginActivity.class));
