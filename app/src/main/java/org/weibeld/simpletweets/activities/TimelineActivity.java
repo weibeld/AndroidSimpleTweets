@@ -3,6 +3,7 @@ package org.weibeld.simpletweets.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -65,6 +66,7 @@ public class TimelineActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
+        b.recyclerView.addItemDecoration(new SpacingItemDecoration(26));
         b.swipeContainer.setOnRefreshListener(() -> loadTweets(1, true));
         b.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
@@ -215,5 +217,20 @@ public class TimelineActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    class SpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public SpacingItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            //if (parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1)
+                outRect.top = verticalSpaceHeight;
+        }
     }
 }

@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="tweet" type="org.weibeld.simpletweets.db.Tweet"/>
     </data>
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <ImageView
-            android:id="@+id/ivProfileImage"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            app:imageUrl="@{tweet.user.profileImageUrl}"
-            />
+        android:layout_height="wrap_content"
+        card_view:elevation="4dp">
 
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/ivProfileImage"
-            android:text="@{tweet.user.screenName}"
-            />
+            android:padding="4dp"
+            >
 
-        <TextView
-            android:id="@+id/tvCreatedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            app:relativeTimestamp="@{tweet.createdAt}"
-            />
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                app:imageUrl="@{tweet.user.profileImageUrl}"
+                android:layout_marginRight="8dp"
+                />
 
-        <TextView
-            android:id="@+id/tvText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvUsername"
-            android:layout_toRightOf="@+id/ivProfileImage"
-            android:autoLink="web"
-            android:text="@{tweet.text}"
-            />
-    
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/ivProfileImage"
+                android:text="@{tweet.user.screenName}"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/tvCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                app:relativeTimestamp="@{tweet.createdAt}"
+                />
+
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvUsername"
+                android:layout_toRightOf="@+id/ivProfileImage"
+                android:autoLink="web"
+                android:text="@{tweet.text}"
+                android:textStyle="italic"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
 </layout>

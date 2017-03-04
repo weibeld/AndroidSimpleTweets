@@ -6,7 +6,14 @@
         android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#601c9dec"
         tools:context="com.codepath.apps.restclienttemplate.com.weibeld.simpletweets.activities.TimelineActivity">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/twitter_logo_large"/>
 
         <TextView
             android:id="@+id/tvOffline"
@@ -24,7 +31,10 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
