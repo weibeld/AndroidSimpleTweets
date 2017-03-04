@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -134,6 +136,14 @@ public class Util {
         Gson gson = new Gson();
         String json = prefs.getString(c.getString(R.string.pref_current_user), gson.toJson(new User()));
         return gson.fromJson(json, User.class);
+    }
+
+    // Hide the soft keyboard if it is currently displayed. This should be called immediately before
+    // the activity is exited to prevent that the keyboard is still shown in the parent activity
+    // for a short moment.
+    public static void hideKeyboard(Activity a, EditText et) {
+        InputMethodManager imm = (InputMethodManager) a.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
 }

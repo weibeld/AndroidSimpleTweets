@@ -74,6 +74,7 @@ public class ComposeActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Util.toast(mActivity, getString(R.string.toast_tweet_posted));
+                    Util.hideKeyboard(mActivity, b.etCompose);
                     startActivity(new Intent(mActivity, TimelineActivity.class));
                 }
                 @Override
@@ -113,6 +114,7 @@ public class ComposeActivity extends AppCompatActivity {
     // When clicking the navigation icon, just restart parent activity, rather than recreating it
     @Override
     public boolean onSupportNavigateUp() {
+        Util.hideKeyboard(mActivity, b.etCompose);
         onBackPressed();
         return true;
     }

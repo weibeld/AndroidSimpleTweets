@@ -1,6 +1,12 @@
 package org.weibeld.simpletweets.db;
 
 import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -34,6 +40,9 @@ public class User extends BaseModel implements Serializable {
     public String screenName = "";
 
     @Column
+    public String description = "";
+
+    @Column
     public String profileImageUrl = "";
 
     // Empty default constructor (required by DBFlow)
@@ -48,6 +57,7 @@ public class User extends BaseModel implements Serializable {
             this.id = object.getLong("id");
             this.name = object.getString("name");
             this.screenName = "@" + object.getString("screen_name");
+            this.description = object.getString("description");
             // Provided: "mini": 24x24px, "normal": 48x48px, "bigger": 73x73px, "original": WxH
             this.profileImageUrl = object.getString("profile_image_url").replace("normal", "bigger");
         } catch (JSONException e) {
@@ -67,6 +77,43 @@ public class User extends BaseModel implements Serializable {
         Picasso.with(view.getContext())
                 .load(url)
                 .placeholder(R.drawable.placeholder_profile_image_75)
+                .transform(new RoundedTransformation(8, 0))
                 .into(view);
+    }
+
+    // enables hardware accelerated rounded corners
+// original idea here : http://www.curious-creature.org/2012/12/11/android-recipe-1-image-with-rounded-corners/
+    public static class RoundedTransformation implements com.squareup.picasso.Transformation {
+        private final int radius;
+        private final int margin;  // dp
+
+        // radius is corner radii in dp
+        // margin is the board in dp
+        public RoundedTransformation(final int radius, final int margin) {
+            this.radius = radius;
+            this.margin = margin;
+        }
+
+        @Override
+        public Bitmap transform(final Bitmap source) {
+            final Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+            Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin), radius, radius, paint);
+
+            if (source != output) {
+                source.recycle();
+            }
+
+            return output;
+        }
+
+        @Override
+        public String key() {
+            return "rounded(radius=" + radius + ", margin=" + margin + ")";
+        }
     }
 }
