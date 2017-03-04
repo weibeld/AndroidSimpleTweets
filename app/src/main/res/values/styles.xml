@@ -24,7 +24,7 @@
     </style>
 
     <style name="TwitterButton">
-        <item name="android:background">#FF1c9dec</item>
+        <item name="android:background">@color/twitterStrong</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">8dp</item>
