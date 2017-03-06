@@ -33,4 +33,8 @@
         <item name="android:background">@drawable/button_background</item>
     </style>
 
+    <style name="AlternativeAccentColor">
+        <item name="colorAccent">@android:color/black</item>
+    </style>
+
 </resources>

@@ -74,15 +74,18 @@ public class ComposeActivity extends AppCompatActivity {
                 Util.toast(mActivity, getString(R.string.toast_enter_text));
                 return;
             }
+            b.progressBar.setVisibility(View.VISIBLE);
             MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    b.progressBar.setVisibility(View.GONE);
                     Util.toast(mActivity, getString(R.string.toast_tweet_posted));
                     Util.hideKeyboard(mActivity, b.etCompose);
                     startActivity(new Intent(mActivity, TimelineActivity.class));
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    b.progressBar.setVisibility(View.GONE);
                     if (errorResponse != null) {
                         String errorMsg = Util.extractJsonErrorMsg(errorResponse);
                         Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
