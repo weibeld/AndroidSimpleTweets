@@ -6,11 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
 /**
- * Created by dw on 01/03/17.
+ * Infinite pagination for a RecyclerView.
+ *
+ * Source: https://gist.github.com/ssinss/e06f12ef66c51252563e
  */
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
-    // The minimum amount of items to have below your current scroll position
-    // before loading more.
+    // The minimum amount of items to have below your current scroll position before loading more.
     private int visibleThreshold = 2;
     // First page to load through an onScroll event (we load page 1 on activity launch)
     private int startingPage = 2;

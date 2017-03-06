@@ -2,4 +2,5 @@
 <resources>
     <color name="twitterLight">#501c9dec</color>
     <color name="twitterStrong">#FF1c9dec</color>
+    <color name="alternativeAccent">#404040</color>
 </resources>

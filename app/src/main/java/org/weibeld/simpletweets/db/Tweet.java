@@ -3,7 +3,6 @@ package org.weibeld.simpletweets.db;
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
 
-import org.weibeld.simpletweets.util.Util;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -13,6 +12,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.weibeld.simpletweets.util.Util;
 
 /**
  * Model for a Twitter tweet.
@@ -56,7 +56,7 @@ public class Tweet extends BaseModel {
         SQLite.delete().from(Tweet.class).query();
     }
 
-	// Claculate the relative timestamp of the passed time and set it to the passed TextView
+	// Calculate the relative timestamp of the passed time and set it to the passed TextView
 	@BindingAdapter({"bind:relativeTimestamp"})
 	public static void setRelativeTimestamp(TextView tv, String createdAt) {
 		tv.setText(Util.getRelativeTimeAgo(createdAt));

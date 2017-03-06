@@ -1,8 +1,8 @@
-# Project 3 - *Name of App Here*
+# Project 3 - *Simple Tweets*
 
-**Name of your app** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+**Simple Tweets** is an Android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: **25** hours spent in total
 
 ## User Stories
 
@@ -36,7 +36,7 @@ The following **bonus** features are implemented:
 * [ ] Compose tweet functionality is build using modal overlay
 * [ ] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [x] [Leverage RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) as a replacement for the ListView and ArrayAdapter for all lists of tweets.
-* [ ] Move the "Compose" action to a [FloatingActionButton](https://github.com/codepath/android_guides/wiki/Floating-Action-Buttons) instead of on the AppBar.
+* [x] Move the "Compose" action to a [FloatingActionButton](https://github.com/codepath/android_guides/wiki/Floating-Action-Buttons) instead of on the AppBar.
 * [ ] On the Twitter timeline, leverage the [CoordinatorLayout](http://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events) to apply scrolling behavior that [hides / shows the toolbar](http://guides.codepath.com/android/Using-the-App-ToolBar#reacting-to-scroll).
 * [ ] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
 * [x] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
@@ -46,28 +46,36 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] In *offline mode*, the date and time of the last update (fetching of tweets starting from page 1) is indicated
+* [x] Use [Retrolambda](https://github.com/evant/gradle-retrolambda) to replace all anonymous classes implementing a functional interface with a lambda expression
+
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's a walkthrough of the implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![GIF walkthrough](assets/walkthrough.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+- The [Codepath OAuth Handler](https://github.com/codepath/android-oauth-handler) library uses Android Async HTTP as its HTTP client, which cannot be hooked up with [Stetho](http://facebook.github.io/stetho/). This is quite a disadvantage, because Stetho is really great for monitoring HTTP API calls. So, the next time, I would implement the OAuth functionality directly with ScribeJava and use Retrofit as the HTTP client.
 
 ## Open-source libraries used
 
+- [Codepath OAuth Handler](https://github.com/codepath/android-oauth-handler) - Android library for simplifying the handling of OAuth requests (uses ScribeJava and Android Async HTTP)
+- [ScribeJava](https://github.com/scribejava/scribejava) - Simple OAuth client Java library
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
+- [Gson](https://github.com/google/gson) - Java serialization/deserialization library for converting JSON objects to Java objects and vice versa
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
+- [DBFlow](https://github.com/Raizlabs/DBFlow) - Object-relational mapper (ORM) for Android
+- [Retrolambda](https://github.com/evant/gradle-retrolambda) - Enable lambda expressions and method references for Java < 8
+- [Stetho](http://facebook.github.io/stetho/) - Chrome-based Android debugging bridge (used for inspecting SQLite database)
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright 2017 Daniel Weibel
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
