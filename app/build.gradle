@@ -6,7 +6,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.codepath.apps.restclienttemplate"
+        applicationId "org.weibeld.simpletweets"
         minSdkVersion 16
         targetSdkVersion 25
     }
