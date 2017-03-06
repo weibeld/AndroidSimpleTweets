@@ -29,6 +29,8 @@ import java.io.Serializable;
 @Table(database = MyDatabase.class)
 public class User extends BaseModel implements Serializable {
 
+    private static final String LOG_TAG = User.class.getSimpleName();
+
     @PrimaryKey
     @Column
     public Long id;
@@ -73,12 +75,16 @@ public class User extends BaseModel implements Serializable {
     // Load the profile image of a user into the passed ImageView
     @BindingAdapter({"bind:imageUrl"})
     public static void loadImage(ImageView view, String url) {
-        Log.d("User", "Loading image " + url);
-        Picasso.with(view.getContext())
-                .load(url)
-                .placeholder(R.drawable.placeholder_profile_image_75)
-                .transform(new RoundedTransformation(8, 0))
-                .into(view);
+        if (url != null && !url.isEmpty()) {
+            Log.d(LOG_TAG, "Loading image " + url);
+            Picasso.with(view.getContext())
+                    .load(url)
+                    .placeholder(R.drawable.placeholder_profile_image_75)
+                    .transform(new RoundedTransformation(8, 0))
+                    .into(view);
+        }
+        else
+            Log.d(LOG_TAG, "Trying to load user profile image from empty URL");
     }
 
 
