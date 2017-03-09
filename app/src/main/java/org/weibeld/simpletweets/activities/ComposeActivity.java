@@ -1,5 +1,6 @@
 package org.weibeld.simpletweets.activities;
 
+
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -18,13 +19,11 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.databinding.ActivityComposeBinding;
-import org.weibeld.simpletweets.db.User;
-import org.weibeld.simpletweets.util.MyApplication;
-import org.weibeld.simpletweets.util.Util;
+import org.weibeld.simpletweets.managers.LoginManager;
+import org.weibeld.simpletweets.misc.MyApplication;
+import org.weibeld.simpletweets.misc.Util;
 
 import cz.msebera.android.httpclient.Header;
-
-import static android.content.Intent.EXTRA_USER;
 
 public class ComposeActivity extends AppCompatActivity {
 
@@ -33,7 +32,6 @@ public class ComposeActivity extends AppCompatActivity {
     ActivityComposeBinding b;
 
     ComposeActivity mActivity;
-    User mCurrentUser;
     boolean mIsOfflineMode;
 
     @Override
@@ -41,13 +39,14 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
 
+        setSupportActionBar(b.toolbar);
+
         mActivity = this;
 
         Intent intent = getIntent();
-        mCurrentUser = (User) intent.getSerializableExtra(EXTRA_USER);
         mIsOfflineMode = intent.getBooleanExtra(TimelineActivity.EXTRA_IS_OFFLINE, false);
 
-        b.setUser(mCurrentUser);
+        b.setUser(LoginManager.getInstance().getAuthenticatedUser());
 
         ActionBar a = getSupportActionBar();
         a.setTitle(R.string.title_compose_activity);
@@ -68,34 +67,38 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         // On clicking button "Tweet"
-        b.btnTweet.setOnClickListener(v -> {
-            String text = b.etCompose.getText().toString();
-            if (text.isEmpty()) {
-                Util.toast(mActivity, getString(R.string.toast_enter_text));
-                return;
-            }
-            b.progressBar.setVisibility(View.VISIBLE);
-            MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    b.progressBar.setVisibility(View.GONE);
-                    Util.toast(mActivity, getString(R.string.toast_tweet_posted));
-                    Util.hideKeyboard(mActivity, b.etCompose);
-                    startActivity(new Intent(mActivity, TimelineActivity.class));
+        b.btnTweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = b.etCompose.getText().toString();
+                if (text.isEmpty()) {
+                    Util.toast(mActivity, getString(R.string.toast_enter_text));
+                    return;
                 }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    b.progressBar.setVisibility(View.GONE);
-                    if (errorResponse != null) {
-                        String errorMsg = Util.extractJsonErrorMsg(errorResponse);
-                        Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
+                b.progressBar.setVisibility(View.VISIBLE);
+                MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        b.progressBar.setVisibility(View.GONE);
+                        Util.toast(mActivity, getString(R.string.toast_tweet_posted));
+                        Util.hideKeyboard(mActivity, b.etCompose);
+                        startActivity(new Intent(mActivity, TimelineActivity.class));
                     }
-                    else
-                        Util.toastLong(mActivity, getString(R.string.toast_network_error_compose));
-                    throwable.printStackTrace();
-                }
-            });
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        b.progressBar.setVisibility(View.GONE);
+                        if (errorResponse != null) {
+                            String errorMsg = Util.extractJsonErrorMsg(errorResponse);
+                            Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
+                        }
+                        else
+                            Util.toastLong(mActivity, getString(R.string.toast_network_error_compose));
+                        throwable.printStackTrace();
+                    }
+                });
+            }
         });
+
 
         // Character count
         b.etCompose.addTextChangedListener(new TextWatcher() {

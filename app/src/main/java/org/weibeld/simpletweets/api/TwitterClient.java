@@ -34,6 +34,15 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().get(apiUrl, params, handler);
 	}
 
+    public void getMentionsTimeline(int page, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getMentionsTimeline");
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + apiUrl);
+        RequestParams params = new RequestParams();
+        params.put("page", String.valueOf(page));
+        client.get(apiUrl, params, handler);
+    }
+
     public void getCurrentUser(AsyncHttpResponseHandler handler) {
         Log.d(LOG_TAG, "getCurrentUser");
         String currentUserApiUrl = getApiUrl("account/verify_credentials.json");
@@ -51,16 +60,6 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(postTweetApiUrl, params, handler);
     }
 
-
-//    public void getMentionsTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
-//        Log.d(LOG_TAG, "getMentionsTimeline");
-//        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
-//        Log.d(LOG_TAG, "Api Url:" + apiUrl);
-//        if (params != null) {
-//            Log.d(LOG_TAG, "RequestParams:" + params.toString());
-//        }
-//        client.get(apiUrl, params, handler);
-//    }
 //
 //    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
 //        Log.d(LOG_TAG, "getUserTimeline");

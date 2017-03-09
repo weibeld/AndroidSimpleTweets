@@ -1,4 +1,4 @@
-package org.weibeld.simpletweets.util;
+package org.weibeld.simpletweets.misc;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,7 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
-import org.weibeld.simpletweets.db.User;
+import org.weibeld.simpletweets.models.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,7 +135,7 @@ public class Util {
     }
 
     public static User getCurrentUserFromPrefs(Context c) {
-        SharedPreferences prefs = MyApplication.getSharedPreferences();
+        SharedPreferences prefs = MyApplication.getPrefs();
         Gson gson = new Gson();
         String json = prefs.getString(c.getString(R.string.pref_current_user), gson.toJson(new User()));
         return gson.fromJson(json, User.class);

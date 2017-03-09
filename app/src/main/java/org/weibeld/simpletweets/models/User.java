@@ -1,4 +1,4 @@
-package org.weibeld.simpletweets.db;
+package org.weibeld.simpletweets.models;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
+import org.weibeld.simpletweets.db.MyDatabase;
 
 import java.io.Serializable;
 

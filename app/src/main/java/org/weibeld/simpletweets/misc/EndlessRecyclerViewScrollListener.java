@@ -1,4 +1,4 @@
-package org.weibeld.simpletweets.util;
+package org.weibeld.simpletweets.misc;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

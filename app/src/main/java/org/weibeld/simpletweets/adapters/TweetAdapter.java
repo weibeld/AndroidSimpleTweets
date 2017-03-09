@@ -1,12 +1,11 @@
 package org.weibeld.simpletweets.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import org.weibeld.simpletweets.databinding.ItemTweetBinding;
-import org.weibeld.simpletweets.db.Tweet;
+import org.weibeld.simpletweets.models.Tweet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +18,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     private static final String LOG_TAG = TweetAdapter.class.getSimpleName();
 
-    Context mContext;
     ArrayList<Tweet> mData;
 
-    public TweetAdapter(ArrayList<Tweet> data, Context context) {
+    public TweetAdapter(ArrayList<Tweet> data) {
         mData = data;
-        mContext = context;
     }
 
     @Override

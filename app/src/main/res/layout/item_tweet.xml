@@ -5,7 +5,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="tweet" type="org.weibeld.simpletweets.db.Tweet"/>
+        <variable name="tweet" type="org.weibeld.simpletweets.models.Tweet"/>
     </data>
 
     <android.support.v7.widget.CardView

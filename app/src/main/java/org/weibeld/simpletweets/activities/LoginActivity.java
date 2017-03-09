@@ -18,11 +18,14 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
     ActivityLoginBinding b;
+    LoginActivity mActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		b = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        mActivity = this;
+		setSupportActionBar(b.toolbar);
 	}
 
 	// OAuth authenticated successfully, launch primary authenticated activity
@@ -31,8 +34,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	public void onLoginSuccess() {
         Log.d(LOG_TAG, "Login successful");
         b.progressBar.setVisibility(View.GONE);
-		 Intent i = new Intent(this, TimelineActivity.class);
-		 startActivity(i);
+        startActivity(new Intent(mActivity, TimelineActivity.class));
 	}
 
 	// OAuth authentication flow failed, handle the error

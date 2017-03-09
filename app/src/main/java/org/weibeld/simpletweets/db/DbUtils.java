@@ -1,5 +1,8 @@
 package org.weibeld.simpletweets.db;
 
+import org.weibeld.simpletweets.models.Tweet;
+import org.weibeld.simpletweets.models.User;
+
 /**
  * Created by dw on 03/03/17.
  */

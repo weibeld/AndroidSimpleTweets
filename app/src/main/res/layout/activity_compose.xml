@@ -7,7 +7,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="user" type="org.weibeld.simpletweets.db.User"/>
+        <variable name="user" type="org.weibeld.simpletweets.models.User"/>
     </data>
 
     <LinearLayout
@@ -16,6 +16,11 @@
         android:orientation="vertical"
         android:background="@color/twitterLight"
         >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            />
 
         <TextView
             android:id="@+id/tvOffline"

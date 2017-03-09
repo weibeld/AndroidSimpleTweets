@@ -1,4 +1,4 @@
-package org.weibeld.simpletweets.util;
+package org.weibeld.simpletweets.misc;
 
 import android.app.Application;
 import android.content.Context;
@@ -30,7 +30,7 @@ public class MyApplication extends Application {
 		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, MyApplication.context);
 	}
 
-	public static SharedPreferences getSharedPreferences() {
+	public static SharedPreferences getPrefs() {
 		return context.getSharedPreferences("main", MODE_PRIVATE);
 	}
 }
