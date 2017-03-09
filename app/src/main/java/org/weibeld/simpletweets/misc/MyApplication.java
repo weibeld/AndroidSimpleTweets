@@ -33,4 +33,8 @@ public class MyApplication extends Application {
 	public static SharedPreferences getPrefs() {
 		return context.getSharedPreferences("main", MODE_PRIVATE);
 	}
+
+	public static Context getContext() {
+		return context;
+	}
 }

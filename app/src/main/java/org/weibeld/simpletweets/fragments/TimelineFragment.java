@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -20,6 +19,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.adapters.TweetAdapter;
 import org.weibeld.simpletweets.databinding.FragmentTimelineBinding;
+import org.weibeld.simpletweets.managers.OfflineModeManager;
 import org.weibeld.simpletweets.misc.EndlessRecyclerViewScrollListener;
 import org.weibeld.simpletweets.misc.MyApplication;
 import org.weibeld.simpletweets.misc.SpacingItemDecoration;
@@ -42,8 +42,6 @@ public abstract class TimelineFragment extends Fragment {
 
     private static final String LOG_TAG = TimelineFragment.class.getSimpleName();
 
-    protected final static String ARG_IS_OFFLINE = "OfflineMode";
-
     FragmentTimelineBinding b;
 
     ArrayList<Tweet> mData;
@@ -53,8 +51,6 @@ public abstract class TimelineFragment extends Fragment {
     SimpleDateFormat mFormatAnyDay = new SimpleDateFormat("d MMM yyyy HH:mm", Locale.UK);
     SimpleDateFormat mFormatToday = new SimpleDateFormat("'today at' HH:mm", Locale.UK);
     SimpleDateFormat mFormatYesterday = new SimpleDateFormat("'yesterday at' HH:mm", Locale.UK);
-
-    protected boolean mIsOfflineMode;
 
     protected TimelineFragmentListener mListener;
 
@@ -74,20 +70,13 @@ public abstract class TimelineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         b = DataBindingUtil.inflate(inflater, R.layout.fragment_timeline, container, false);
 
-        mIsOfflineMode = isOfflineMode();
-
         mData = new ArrayList();
         mAdapter = new TweetAdapter(mData);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
         b.recyclerView.addItemDecoration(new SpacingItemDecoration(26));
-        b.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getTweetsFromApi(1, true);
-            }
-        });
+        b.swipeContainer.setOnRefreshListener(() -> getTweetsFromApi(1, true));
         b.swipeContainer.setColorSchemeResources(R.color.twitterStrong, R.color.twitterLight);
         mScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
@@ -95,14 +84,14 @@ public abstract class TimelineFragment extends Fragment {
                 getTweetsFromApi(page, false);
             }
         };
-        b.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFabClicked();
-            }
-        });
+        b.fab.setOnClickListener(v -> mListener.onFabClicked());
 
-        if (mIsOfflineMode) {
+        OfflineModeManager modeManager = OfflineModeManager.getInstance();
+        if (!modeManager.isOfflineMode()) {
+            b.recyclerView.addOnScrollListener(mScrollListener);
+            getTweetsFromApi(1, false);
+        }
+        else {
             // Set up offline indicator
             Long ts = MyApplication.getPrefs().getLong(getLastUpdatePrefKey(), 0);
             Calendar date = GregorianCalendar.getInstance();
@@ -129,10 +118,7 @@ public abstract class TimelineFragment extends Fragment {
             ArrayList<Tweet> dbTweets = getTweetsFromDb();
             mAdapter.append(dbTweets);
         }
-        else {
-            b.recyclerView.addOnScrollListener(mScrollListener);
-            getTweetsFromApi(1, false);
-        }
+
         return b.getRoot();
     }
 
@@ -140,60 +126,22 @@ public abstract class TimelineFragment extends Fragment {
         return (ArrayList<Tweet>) SQLite.select().from(Tweet.class).where(Tweet_Table.type.is(getType())).orderBy(Tweet_Table.id, false).queryList();
     }
 
-
-
     protected abstract String getLastUpdatePrefKey();
 
     protected abstract int getType();
 
     protected abstract void getTweetsFromApi(int page, boolean isRefreshing);
 
-    protected abstract boolean isOfflineMode();
-
     // Get the title of this fragment
     public abstract String getTitle();
 
-
     public interface TimelineFragmentListener {
         void onFabClicked();
-
-
     }
 
-//    private void enableOfflineMode() {
-//        // Set up offline indicator
-//        SharedPreferences prefs = MyApplication.getPrefs();
-//        Long ts = prefs.getLong(getString(R.string.pref_last_update), 0);
-//        Calendar date = GregorianCalendar.getInstance();
-//        date.setTimeInMillis(ts);
-//        String dateStr;
-//        if (Util.isToday(date))
-//            dateStr = mFormatToday.format(new Date(ts));
-//        else if (Util.isYesterday(date))
-//            dateStr = mFormatYesterday.format(new Date(ts));
-//        else
-//            dateStr = mFormatAnyDay.format(new Date(ts));
-//        String text = String.format(getString(R.string.offline_timeline), dateStr);
-//        SpannableString msg = new SpannableString(text);
-//        msg.setSpan(new StyleSpan(Typeface.BOLD), 0, 7, 0);
-//        msg.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 8, msg.length(), 0);
-//        b.tvOffline.setText(msg);
-//        b.tvOffline.setVisibility(View.VISIBLE);
-//
-//        // Disable endless scrolling
-//        b.recyclerView.removeOnScrollListener(mScrollListener);
-//
-//        // Clear data in memory (if any) and load data from database
-//        mAdapter.clear();
-//        ArrayList<Tweet> dbTweets = (ArrayList<Tweet>) SQLite.select().from(Tweet.class).orderBy(Tweet_Table.id, false).queryList();
-//        mAdapter.append(dbTweets);
-//
-//        mIsOfflineMode = true;
+//    private void disableOfflineMode() {
+//        b.tvOffline.setVisibility(View.GONE);
+//        b.recyclerView.addOnScrollListener(mScrollListener);
+//        mIsOfflineMode = false;
 //    }
-    //
-    private void disableOfflineMode() {
-        b.tvOffline.setVisibility(View.GONE);
-        b.recyclerView.addOnScrollListener(mScrollListener);
-        mIsOfflineMode = false;
-    }
 }

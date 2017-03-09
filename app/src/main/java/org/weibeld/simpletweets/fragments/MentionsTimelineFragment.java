@@ -1,6 +1,5 @@
 package org.weibeld.simpletweets.fragments;
 
-import android.os.Bundle;
 import android.view.View;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -10,9 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.db.DbUtils;
-import org.weibeld.simpletweets.models.Tweet;
 import org.weibeld.simpletweets.misc.MyApplication;
 import org.weibeld.simpletweets.misc.Util;
+import org.weibeld.simpletweets.models.Tweet;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -27,22 +26,9 @@ import static org.weibeld.simpletweets.models.Tweet.TYPE_MENTIONS;
 
 public class MentionsTimelineFragment extends TimelineFragment {
 
-    public static MentionsTimelineFragment newInstance(boolean isOfflineMode) {
-        MentionsTimelineFragment f = new MentionsTimelineFragment();
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_IS_OFFLINE, isOfflineMode);
-        f.setArguments(args);
-        return f;
-    }
-
     @Override
     public String getTitle() {
         return "Mentions";
-    }
-
-    @Override
-    protected boolean isOfflineMode() {
-        return getArguments().getBoolean(ARG_IS_OFFLINE, false);
     }
 
     @Override

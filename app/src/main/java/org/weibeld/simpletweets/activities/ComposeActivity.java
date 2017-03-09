@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.databinding.ActivityComposeBinding;
 import org.weibeld.simpletweets.managers.LoginManager;
+import org.weibeld.simpletweets.managers.OfflineModeManager;
 import org.weibeld.simpletweets.misc.MyApplication;
 import org.weibeld.simpletweets.misc.Util;
 
@@ -32,21 +34,22 @@ public class ComposeActivity extends AppCompatActivity {
     ActivityComposeBinding b;
 
     ComposeActivity mActivity;
-    boolean mIsOfflineMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = DataBindingUtil.setContentView(this, R.layout.activity_compose);
-
+        mActivity = this;
         setSupportActionBar(b.toolbar);
 
-        mActivity = this;
+        LoginManager loginManager = LoginManager.getInstance();
 
-        Intent intent = getIntent();
-        mIsOfflineMode = intent.getBooleanExtra(TimelineActivity.EXTRA_IS_OFFLINE, false);
-
-        b.setUser(LoginManager.getInstance().getAuthenticatedUser());
+        if (loginManager.hasAuthenticatedUser()) {
+            b.setUser(LoginManager.getInstance().getAuthenticatedUser());
+        }
+        else {
+            Log.d(LOG_TAG, "No authenticated user");
+        }
 
         ActionBar a = getSupportActionBar();
         a.setTitle(R.string.title_compose_activity);
@@ -54,7 +57,8 @@ public class ComposeActivity extends AppCompatActivity {
         a.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         // Enable offline mode (note: ComposeActivity can't transition from offline to online mode)
-        if (mIsOfflineMode) {
+        OfflineModeManager modeManager = OfflineModeManager.getInstance();
+        if (modeManager.isOfflineMode()) {
             // Disable input widgets
             b.etCompose.setEnabled(false);
             b.btnTweet.setEnabled(false);
@@ -67,36 +71,33 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         // On clicking button "Tweet"
-        b.btnTweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = b.etCompose.getText().toString();
-                if (text.isEmpty()) {
-                    Util.toast(mActivity, getString(R.string.toast_enter_text));
-                    return;
-                }
-                b.progressBar.setVisibility(View.VISIBLE);
-                MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        b.progressBar.setVisibility(View.GONE);
-                        Util.toast(mActivity, getString(R.string.toast_tweet_posted));
-                        Util.hideKeyboard(mActivity, b.etCompose);
-                        startActivity(new Intent(mActivity, TimelineActivity.class));
-                    }
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        b.progressBar.setVisibility(View.GONE);
-                        if (errorResponse != null) {
-                            String errorMsg = Util.extractJsonErrorMsg(errorResponse);
-                            Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
-                        }
-                        else
-                            Util.toastLong(mActivity, getString(R.string.toast_network_error_compose));
-                        throwable.printStackTrace();
-                    }
-                });
+        b.btnTweet.setOnClickListener(v -> {
+            String text = b.etCompose.getText().toString();
+            if (text.isEmpty()) {
+                Util.toast(mActivity, getString(R.string.toast_enter_text));
+                return;
             }
+            b.progressBar.setVisibility(View.VISIBLE);
+            MyApplication.getTwitterClient().postTweet(text, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    b.progressBar.setVisibility(View.GONE);
+                    Util.toast(mActivity, getString(R.string.toast_tweet_posted));
+                    Util.hideKeyboard(mActivity, b.etCompose);
+                    startActivity(new Intent(mActivity, TimelineActivity.class));
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    b.progressBar.setVisibility(View.GONE);
+                    if (errorResponse != null) {
+                        String errorMsg = Util.extractJsonErrorMsg(errorResponse);
+                        Util.toastLong(mActivity, String.format(getString(R.string.toast_server_error_compose), errorMsg));
+                    }
+                    else
+                        Util.toastLong(mActivity, getString(R.string.toast_network_error_compose));
+                    throwable.printStackTrace();
+                }
+            });
         });
 
 
