@@ -1,6 +1,7 @@
 package org.weibeld.simpletweets.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -36,6 +37,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Tweet tweet = mData.get(position);
         ItemTweetBinding binding = holder.getBinding();
+        binding.ivProfileImage.setOnClickListener(v -> {
+            Log.d(LOG_TAG, "Clicked ImageView at position " + position);
+        });
         binding.setTweet(tweet);
         binding.executePendingBindings();
     }
