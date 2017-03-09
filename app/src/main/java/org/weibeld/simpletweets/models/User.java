@@ -46,7 +46,25 @@ public class User extends BaseModel implements Serializable {
     public String description = "";
 
     @Column
-    public String profileImageUrl = "";
+    public String profileImageUrlMini = "";
+
+    @Column
+    public String profileImageUrlNormal = "";
+
+    @Column
+    public String profileImageUrlBigger = "";
+
+    @Column
+    public String profileImageUrlOriginal = "";
+
+    @Column
+    public int followersCount = -1;
+
+    @Column
+    public int followingCount = -1;
+
+    @Column
+    public int tweetsCount = -1;
 
     // Empty default constructor (required by DBFlow)
     public User() {
@@ -60,9 +78,15 @@ public class User extends BaseModel implements Serializable {
             this.id = object.getLong("id");
             this.name = object.getString("name");
             this.screenName = "@" + object.getString("screen_name");
-            this.description = object.getString("description");
-            // Provided: "mini": 24x24px, "normal": 48x48px, "bigger": 73x73px, "original": WxH
-            this.profileImageUrl = object.getString("profile_image_url").replace("normal", "bigger");
+            this.description = object.has("description") ? object.getString("description") : "";
+            // Provided image sizes: "mini": 24x24px, "normal": 48x48px, "bigger": 73x73px, "original": WxH
+            this.profileImageUrlMini = object.has("profile_image_url") ? object.getString("profile_image_url").replace("_normal", "_mini") : "";
+            this.profileImageUrlNormal = object.has("profile_image_url") ? object.getString("profile_image_url") : "";
+            this.profileImageUrlBigger = object.has("profile_image_url") ? object.getString("profile_image_url").replace("_normal", "_bigger") : "";
+            this.profileImageUrlOriginal = object.has("profile_image_url") ? object.getString("profile_image_url").replace("_normal", "") : "";
+            this.followersCount = object.has("followers_count") ? object.getInt("followers_count") : -1;
+            this.followingCount = object.has("friends_count") ? object.getInt("friends_count") : -1;
+            this.tweetsCount = object.has("statuses_count") ? object.getInt("statuses_count") : -1;
         } catch (JSONException e) {
             e.printStackTrace();
         }

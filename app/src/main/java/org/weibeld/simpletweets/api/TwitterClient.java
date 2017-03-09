@@ -60,28 +60,26 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(postTweetApiUrl, params, handler);
     }
 
-//
-//    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
-//        Log.d(LOG_TAG, "getUserTimeline");
-//        String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
-//        Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
-//        client.get(currentUserApiUrl, params, handler);
-//    }
-//
-//    public void getUserInfo(AsyncHttpResponseHandler handler, long uid) {
-//        Log.d(LOG_TAG, "getUserInfo");
-//        String userApiUrl = getApiUrl("users/show.json");
-//        RequestParams params = new RequestParams();
-//        params.put("user_id", String.valueOf(uid));
-//        client.get(userApiUrl, params, handler);
-//    }
-//
-//    public void getUserInfo(AsyncHttpResponseHandler handler, String screen_name) {
-//        Log.d(LOG_TAG, "getUserInfo");
-//        String userApiUrl = getApiUrl("users/show.json");
-//        RequestParams params = new RequestParams();
-//        params.put("screen_name", screen_name);
-//        client.get(userApiUrl, params, handler);
-//    }
+    public void getUserProfile(AsyncHttpResponseHandler handler, String screen_name) {
+        Log.d(LOG_TAG, "getUserInfo");
+        String userApiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screen_name);
+        client.get(userApiUrl, params, handler);
+    }
 
+    public void getUserProfile(AsyncHttpResponseHandler handler, long uid) {
+        Log.d(LOG_TAG, "getUserProfile");
+        String userApiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", String.valueOf(uid));
+        client.get(userApiUrl, params, handler);
+    }
+
+    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+        Log.d(LOG_TAG, "getUserTimeline");
+        String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
+        Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
+        client.get(currentUserApiUrl, params, handler);
+    }
 }

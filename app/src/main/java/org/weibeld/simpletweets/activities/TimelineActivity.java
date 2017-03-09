@@ -27,10 +27,11 @@ import cz.msebera.android.httpclient.Header;
 public class TimelineActivity extends AppCompatActivity implements TimelineFragment.TimelineFragmentListener {
 
     private static final String LOG_TAG = TimelineActivity.class.getSimpleName();
-    public static final String EXTRA_IS_OFFLINE = "offline" ;
 
     ActivityTimelineBinding b;
     TimelineActivity mActivity;
+    LoginManager mLoginMgr = LoginManager.getInstance();
+    OfflineModeManager mOfflineMgr = OfflineModeManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +42,10 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
         getSupportActionBar().setSubtitle(" ");
 
         // Determine whether to start the app in online or offline mode
-        OfflineModeManager.getInstance().determineMode();
+        mOfflineMgr.determineMode();
 
         // Determine the currently authenticated user
-        LoginManager.getInstance().determineAuthenticatedUser(new LoginManager.DetermineUserCallback() {
+        mLoginMgr.determineAuthenticatedUser(new LoginManager.DetermineUserCallback() {
             @Override
             public void success(User user) {
                 getSupportActionBar().setSubtitle(user.screenName);
@@ -81,6 +82,11 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
                 MyApplication.getTwitterClient().clearAccessToken();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();  // Destroy this activity so that it's not kept on the back stack
+                return true;
+            case R.id.action_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra(Intent.EXTRA_USER, mLoginMgr.getAuthenticatedUser());
+                startActivity(intent);
                 return true;
         }
         return false;

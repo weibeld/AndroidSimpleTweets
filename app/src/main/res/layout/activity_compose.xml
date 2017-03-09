@@ -56,7 +56,7 @@
                         android:adjustViewBounds="true"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        app:imageUrl="@{user.profileImageUrl}"
+                        app:imageUrl="@{user.profileImageUrlBigger}"
                         android:layout_marginRight="8dp"
                         />
 

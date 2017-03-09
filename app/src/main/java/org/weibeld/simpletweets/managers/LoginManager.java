@@ -41,9 +41,7 @@ public class LoginManager {
 
     // Call when wishing to determine the currently authenticated user
     public void determineAuthenticatedUser(DetermineUserCallback callback) {
-        OfflineModeManager m = OfflineModeManager.getInstance();
-
-        if (!m.isOfflineMode()) {
+        if (!OfflineModeManager.getInstance().isOfflineMode()) {
             // Read current user from API
             MyApplication.getTwitterClient().getCurrentUser(new JsonHttpResponseHandler() {
                 @Override
