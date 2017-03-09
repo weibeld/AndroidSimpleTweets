@@ -26,6 +26,7 @@ import org.weibeld.simpletweets.misc.SpacingItemDecoration;
 import org.weibeld.simpletweets.misc.Util;
 import org.weibeld.simpletweets.models.Tweet;
 import org.weibeld.simpletweets.models.Tweet_Table;
+import org.weibeld.simpletweets.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,14 +53,14 @@ public abstract class TimelineFragment extends Fragment {
     SimpleDateFormat mFormatToday = new SimpleDateFormat("'today at' HH:mm", Locale.UK);
     SimpleDateFormat mFormatYesterday = new SimpleDateFormat("'yesterday at' HH:mm", Locale.UK);
 
-    protected TimelineFragmentListener mListener;
+    protected TimelineFragmentListener mGeneralListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         if (context instanceof TimelineFragmentListener) {
-            mListener = (TimelineFragmentListener) context;
+            mGeneralListener = (TimelineFragmentListener) context;
         } else {
             throw new ClassCastException(context.getClass().getSimpleName() + " must implement " + TimelineFragmentListener.class.getSimpleName());
         }
@@ -72,6 +73,9 @@ public abstract class TimelineFragment extends Fragment {
 
         mData = new ArrayList();
         mAdapter = new TweetAdapter(mData);
+        mAdapter.setOnProfileImageClickListener(position -> {
+            mGeneralListener.onProfileImageClicked(mData.get(position).user);
+        });
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
@@ -84,7 +88,7 @@ public abstract class TimelineFragment extends Fragment {
                 getTweetsFromApi(page, false);
             }
         };
-        b.fab.setOnClickListener(v -> mListener.onFabClicked());
+        b.fab.setOnClickListener(v -> mGeneralListener.onFabClicked());
 
         OfflineModeManager modeManager = OfflineModeManager.getInstance();
         if (!modeManager.isOfflineMode()) {
@@ -137,6 +141,7 @@ public abstract class TimelineFragment extends Fragment {
 
     public interface TimelineFragmentListener {
         void onFabClicked();
+        void onProfileImageClicked(User user);
     }
 
 //    private void disableOfflineMode() {

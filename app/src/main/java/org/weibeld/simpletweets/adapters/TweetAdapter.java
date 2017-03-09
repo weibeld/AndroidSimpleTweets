@@ -20,6 +20,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private static final String LOG_TAG = TweetAdapter.class.getSimpleName();
 
     ArrayList<Tweet> mData;
+    OnProfileImageClickListener mProfileImageListener;
 
     public TweetAdapter(ArrayList<Tweet> data) {
         mData = data;
@@ -38,6 +39,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         Tweet tweet = mData.get(position);
         ItemTweetBinding binding = holder.getBinding();
         binding.ivProfileImage.setOnClickListener(v -> {
+            if (mProfileImageListener != null)
+                mProfileImageListener.onProfileImageClicked(position);
             Log.d(LOG_TAG, "Clicked ImageView at position " + position);
         });
         binding.setTweet(tweet);
@@ -47,6 +50,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void setOnProfileImageClickListener(OnProfileImageClickListener listener) {
+        mProfileImageListener = listener;
     }
 
     // Remove all items from the adapter
@@ -61,6 +68,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         int oldSize = mData.size();
         mData.addAll(tweets);
         notifyItemRangeInserted(oldSize, tweets.size());
+    }
+
+    public interface OnProfileImageClickListener {
+        void onProfileImageClicked(int position);
     }
 
 

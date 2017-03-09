@@ -84,9 +84,7 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
                 finish();  // Destroy this activity so that it's not kept on the back stack
                 return true;
             case R.id.action_profile:
-                Intent intent = new Intent(this, ProfileActivity.class);
-                intent.putExtra(Intent.EXTRA_USER, mLoginMgr.getAuthenticatedUser());
-                startActivity(intent);
+                showUserProfile(mLoginMgr.getAuthenticatedUser());
                 return true;
         }
         return false;
@@ -95,6 +93,17 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
     @Override
     public void onFabClicked() {
         startActivity(new Intent(this, ComposeActivity.class));
+    }
+
+    @Override
+    public void onProfileImageClicked(User user) {
+        showUserProfile(user);
+    }
+
+    private void showUserProfile(User user) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
     }
 }
 
