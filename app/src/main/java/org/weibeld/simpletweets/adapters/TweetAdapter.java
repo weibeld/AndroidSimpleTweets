@@ -39,8 +39,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         Tweet tweet = mData.get(position);
         ItemTweetBinding binding = holder.getBinding();
         binding.ivProfileImage.setOnClickListener(v -> {
-            if (mProfileImageListener != null)
-                mProfileImageListener.onProfileImageClicked(position);
+            if (mProfileImageListener != null) mProfileImageListener.onProfileImageClicked(position);
             Log.d(LOG_TAG, "Clicked ImageView at position " + position);
         });
         binding.setTweet(tweet);
@@ -73,7 +72,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public interface OnProfileImageClickListener {
         void onProfileImageClicked(int position);
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ItemTweetBinding b;

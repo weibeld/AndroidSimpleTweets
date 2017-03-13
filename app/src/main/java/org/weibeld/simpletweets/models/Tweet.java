@@ -21,6 +21,7 @@ public class Tweet extends BaseModel {
 
 	public static int TYPE_HOME = 0;
 	public static int TYPE_MENTIONS = 1;
+	public static int TYPE_USER = 2;
 
 	@PrimaryKey
 	@Column

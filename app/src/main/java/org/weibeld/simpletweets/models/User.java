@@ -1,22 +1,14 @@
 package org.weibeld.simpletweets.models;
 
-import android.databinding.BindingAdapter;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.ImageView;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.db.MyDatabase;
-import org.weibeld.simpletweets.misc.RoundedTransformation;
 
 import java.io.Serializable;
 
@@ -95,31 +87,6 @@ public class User extends BaseModel implements Serializable {
     // Delete all rows of this table
     public static void clearTable() {
         SQLite.delete().from(Tweet.class).query();
-    }
-
-    // Load the profile image of a user into the passed ImageView
-    @BindingAdapter({"bind:profileImageUrl"})
-    public static void loadProfileImage(ImageView view, String url) {
-        if (url == null || url.isEmpty())
-            url = Uri.parse("R.drawable.placeholder_profile_image_360").toString();
-        Log.d(LOG_TAG, "Loading image " + url);
-        Picasso.with(view.getContext())
-                .load(url)
-                .placeholder(R.drawable.placeholder_profile_image_360)
-                .transform(new RoundedTransformation(0.0833, 0))
-                .into(view);
-    }
-
-    // Load the profile image of a user into the passed ImageView
-    @BindingAdapter({"bind:profileBannerUrl"})
-    public static void loadProfileBanner(ImageView view, String url) {
-        if (url == null || url.isEmpty())
-            url = Uri.parse("R.drawable.placeholder_banner").toString();
-        Log.d(LOG_TAG, "Loading banner " + url);
-        Picasso.with(view.getContext())
-                .load(url)
-                .placeholder(R.drawable.placeholder_banner)
-                .into(view);
     }
 
 

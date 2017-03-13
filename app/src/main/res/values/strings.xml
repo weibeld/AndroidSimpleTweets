@@ -22,5 +22,6 @@
     <string name="toast_server_error_compose">There was an error posting your tweet: %1$s</string>
     <string name="title_mentions_timeline_frag">Mentions</string>
     <string name="title_home_timeline_frag">Home</string>
+    <string name="pref_last_update_user_timeline">pref_last_update_user_timline</string>
 
 </resources>
