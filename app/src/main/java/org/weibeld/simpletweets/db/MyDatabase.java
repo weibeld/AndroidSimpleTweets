@@ -8,16 +8,12 @@ import org.weibeld.simpletweets.models.User;
 @Database(name = MyDatabase.NAME, version = MyDatabase.VERSION)
 public class MyDatabase {
     public static final String NAME = "SimpleTweetsDatabase";
-    public static final int VERSION = 6;
+    public static final int VERSION = 7;
 
 
     // Delete all rows from all tables of the database
     public static void clearDatabase() {
         Tweet.clearTable();
         User.clearTable();
-    }
-
-    public static void clearTweets(int type) {
-
     }
 }

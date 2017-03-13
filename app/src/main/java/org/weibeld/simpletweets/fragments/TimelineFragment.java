@@ -15,17 +15,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.weibeld.simpletweets.R;
 import org.weibeld.simpletweets.adapters.TweetAdapter;
 import org.weibeld.simpletweets.databinding.FragmentTimelineBinding;
+import org.weibeld.simpletweets.events.OfflineToOnlineEvent;
 import org.weibeld.simpletweets.managers.OfflineModeManager;
 import org.weibeld.simpletweets.misc.EndlessRecyclerViewScrollListener;
 import org.weibeld.simpletweets.misc.MyApplication;
 import org.weibeld.simpletweets.misc.Util;
 import org.weibeld.simpletweets.models.Tweet;
-import org.weibeld.simpletweets.models.Tweet_Table;
 import org.weibeld.simpletweets.models.User;
 
 import java.text.SimpleDateFormat;
@@ -45,14 +45,14 @@ public abstract class TimelineFragment extends Fragment {
 
     FragmentTimelineBinding b;
 
-    ArrayList<Tweet> mData;
-    TweetAdapter mAdapter;
-    LinearLayoutManager mLayoutManager;
-    EndlessRecyclerViewScrollListener mScrollListener;
-    SimpleDateFormat mFormatAnyDay = new SimpleDateFormat("d MMM yyyy HH:mm", Locale.UK);
-    SimpleDateFormat mFormatToday = new SimpleDateFormat("'today at' HH:mm", Locale.UK);
-    SimpleDateFormat mFormatYesterday = new SimpleDateFormat("'yesterday at' HH:mm", Locale.UK);
-
+    protected ArrayList<Tweet> mData;
+    protected TweetAdapter mAdapter;
+    protected LinearLayoutManager mLayoutManager;
+    protected EndlessRecyclerViewScrollListener mScrollListener;
+    protected SimpleDateFormat mFormatAnyDay = new SimpleDateFormat("d MMM yyyy HH:mm", Locale.UK);
+    protected SimpleDateFormat mFormatToday = new SimpleDateFormat("'today at' HH:mm", Locale.UK);
+    protected SimpleDateFormat mFormatYesterday = new SimpleDateFormat("'yesterday at' HH:mm", Locale.UK);
+    protected OfflineModeManager mOfflineMgr;
     protected TimelineFragmentListener mGeneralListener;
 
     @Override
@@ -90,8 +90,8 @@ public abstract class TimelineFragment extends Fragment {
             }
         };
 
-        OfflineModeManager modeManager = OfflineModeManager.getInstance();
-        if (!modeManager.isOfflineMode()) {
+        mOfflineMgr = OfflineModeManager.getInstance();
+        if (!mOfflineMgr.isOfflineMode()) {
             b.recyclerView.addOnScrollListener(mScrollListener);
             getTweetsFromApi(1, false);
         }
@@ -126,13 +126,21 @@ public abstract class TimelineFragment extends Fragment {
         return b.getRoot();
     }
 
-    private ArrayList<Tweet> getTweetsFromDb() {
-        return (ArrayList<Tweet>) SQLite.select().from(Tweet.class).where(Tweet_Table.type.is(getType())).orderBy(Tweet_Table.id, false).queryList();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
-    protected abstract String getLastUpdatePrefKey();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
-    protected abstract int getType();
+    protected abstract ArrayList<Tweet> getTweetsFromDb();
+
+    protected abstract String getLastUpdatePrefKey();
 
     protected abstract void getTweetsFromApi(int page, boolean isRefreshing);
 
@@ -143,9 +151,10 @@ public abstract class TimelineFragment extends Fragment {
         void onProfileImageClicked(User user);
     }
 
-//    private void disableOfflineMode() {
-//        b.tvOffline.setVisibility(View.GONE);
-//        b.recyclerView.addOnScrollListener(mScrollListener);
-//        mIsOfflineMode = false;
-//    }
+    // Called by OfflineModeManager through EventBus when switching from offline to online mode
+    @Subscribe
+    protected void onOfflineToOnlineEvent(OfflineToOnlineEvent e) {
+        b.tvOffline.setVisibility(View.GONE);
+        b.recyclerView.addOnScrollListener(mScrollListener);
+    }
 }

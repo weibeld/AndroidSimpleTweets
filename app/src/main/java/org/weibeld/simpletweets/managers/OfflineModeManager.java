@@ -1,7 +1,8 @@
 package org.weibeld.simpletweets.managers;
 
-import android.util.Log;
-
+import org.greenrobot.eventbus.EventBus;
+import org.weibeld.simpletweets.events.OfflineToOnlineEvent;
+import org.weibeld.simpletweets.events.OnlineToOfflineEvent;
 import org.weibeld.simpletweets.misc.Util;
 
 /**
@@ -20,25 +21,32 @@ public class OfflineModeManager {
         return instance;
     }
 
-    public Boolean isOfflineMode() {
-        return mIsOfflineMode;
-    }
-
-    // Call when wishing to set the mode (online or offline), i.e. on app start
+    // Call this on app initialisation
     public void determineMode() {
         if (Util.hasInternetConnection()) {
-            Log.d(LOG_TAG, "Enabling online mode");
             mIsOfflineMode = false;
         }
         else {
-            Log.d(LOG_TAG, "Enabling offline mode");
             mIsOfflineMode = true;
         }
     }
 
-    // TODO: emit event when switching from offline to online mode
-    // Currently, while the app is running, it's possible to switch from offline to online, but not from online to offline
+    public Boolean isOfflineMode() {
+        return mIsOfflineMode;
+    }
 
+    public void switchToOnlineMode() {
+        if (mIsOfflineMode) {
+            EventBus.getDefault().post(new OfflineToOnlineEvent());
+            mIsOfflineMode = false;
+        }
+    }
 
-
+    // Currently, while the app is running, only offline to online is possible, but not online to offline
+    public void switchToOfflineMode() {
+        if (!mIsOfflineMode) {
+            EventBus.getDefault().post(new OnlineToOfflineEvent());
+            mIsOfflineMode = true;
+        }
+    }
 }

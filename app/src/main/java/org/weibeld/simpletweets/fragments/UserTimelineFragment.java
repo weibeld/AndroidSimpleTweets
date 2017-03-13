@@ -55,8 +55,8 @@ public class UserTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected int getType() {
-        return TYPE_USER;
+    protected ArrayList<Tweet> getTweetsFromDb() {
+        return Tweet.getUserTimeline(mUser);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class UserTimelineFragment extends TimelineFragment {
                             .apply();
                 }
                 // If we were previously in offline mode, now we have Internet again
-//                if (mIsOfflineMode) disableOfflineMode();
+                if (mOfflineMgr.isOfflineMode()) mOfflineMgr.switchToOnlineMode();
                 // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
                 ArrayList<Tweet> tweets = new ArrayList<>();
                 for (int i = 0; i < response.length(); i++) {

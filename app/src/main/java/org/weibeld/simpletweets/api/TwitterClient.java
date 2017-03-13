@@ -68,17 +68,9 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(userApiUrl, params, handler);
     }
 
-//    public void getUserProfile(AsyncHttpResponseHandler handler, long uid) {
-//        Log.d(LOG_TAG, "getUserProfile");
-//        String userApiUrl = getApiUrl("users/show.json");
-//        RequestParams params = new RequestParams();
-//        params.put("user_id", String.valueOf(uid));
-//        client.get(userApiUrl, params, handler);
-//    }
-
     // RequestParams should contain:
     // - "screen_name"
-    // - "max_id" in subsequent requests
+    // - "count" in first request, and "max_id" in subsequent requests
     public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
         Log.d(LOG_TAG, "getUserTimeline");
         String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");

@@ -36,8 +36,8 @@ public class HomeTimelineFragment extends TimelineFragment {
     }
 
     @Override
-    protected int getType() {
-        return TYPE_HOME;
+    protected ArrayList<Tweet> getTweetsFromDb() {
+        return Tweet.getHomeTimeline();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class HomeTimelineFragment extends TimelineFragment {
                             .apply();
                 }
                 // If we were previously in offline mode, now we have Internet again
-//                if (mIsOfflineMode) disableOfflineMode();
+                if (mOfflineMgr.isOfflineMode()) mOfflineMgr.switchToOnlineMode();
                 // Convert the returned JSON array of JSON tweet objects to an ArrayList<Tweet>
                 ArrayList<Tweet> tweets = new ArrayList<Tweet>();
                 for (int i = 0; i < response.length(); i++) {

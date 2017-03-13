@@ -23,6 +23,7 @@ public class Tweet extends BaseModel {
 	public static int TYPE_MENTIONS = 1;
 	public static int TYPE_USER = 2;
 
+    // Composite primary key (id, type)
 	@PrimaryKey
 	@Column
 	public Long id;
@@ -38,8 +39,9 @@ public class Tweet extends BaseModel {
 	@Column
     public String text;
 
-    // TODO: define composite primary key on "id" and "type", so that all timelines can be saved independently from each other (even if they are composed of identical tweets)
-	@Column
+    // Composite primary key (id, type)
+	@PrimaryKey
+    @Column
 	public int type;
 
     // Empty default constructor (required by DBFlow)
@@ -76,17 +78,23 @@ public class Tweet extends BaseModel {
 	}
 
     public static ArrayList<Tweet> getHomeTimeline() {
-        return getTimeline(TYPE_HOME);
+        return getTimelineOfType(TYPE_HOME);
     }
 
     public static ArrayList<Tweet> getMentionsTimeline() {
-        return getTimeline(TYPE_MENTIONS);
+        return getTimelineOfType(TYPE_MENTIONS);
     }
 
-    private static ArrayList<Tweet> getTimeline(int type) {
+    private static ArrayList<Tweet> getTimelineOfType(int type) {
         return (ArrayList<Tweet>) SQLite.select().from(Tweet.class).where(Tweet_Table.type.is(type)).orderBy(Tweet_Table.id, false).queryList();
     }
 
+    public static ArrayList<Tweet> getUserTimeline(User user) {
+        return (ArrayList<Tweet>) SQLite.select().from(Tweet.class)
+                .where(Tweet_Table.type.is(TYPE_USER))
+                .and(Tweet_Table.user_id.is(user.id))
+                .orderBy(Tweet_Table.id, false).queryList();
 
+    }
 
 }

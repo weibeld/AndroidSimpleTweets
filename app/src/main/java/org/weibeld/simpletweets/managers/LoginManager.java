@@ -39,7 +39,7 @@ public class LoginManager {
         return mCurrentUser;
     }
 
-    // Call when wishing to determine the currently authenticated user
+    // Call this on app initialisation
     public void determineAuthenticatedUser(DetermineUserCallback callback) {
         if (!OfflineModeManager.getInstance().isOfflineMode()) {
             // Read current user from API
@@ -79,13 +79,4 @@ public class LoginManager {
         String json = mPrefs.getString(mContext.getString(R.string.pref_current_user), gson.toJson(new User()));
         return gson.fromJson(json, User.class);
     }
-
-//    public void authentication(String username, String password, LoginManagerInterface callback) {
-//
-//        //AsyncTask
-//        mCurrentUser = new User();
-//        callback.success();
-//
-//        EventBus.getDefault().post(new AuthEvent());
-//    }
 }

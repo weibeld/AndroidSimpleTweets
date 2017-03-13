@@ -83,4 +83,7 @@ dependencies {
     // For FloatingActionButton
     compile 'com.android.support:design:25.2.0'
 
+    // EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
 }
