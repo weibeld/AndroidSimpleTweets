@@ -28,6 +28,7 @@ public class ProfileActivity extends AppCompatActivity implements TimelineFragme
 
         setSupportActionBar(b.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.title_profile_activity );
 
         // The user whose profile to display
         mUser = (User) getIntent().getSerializableExtra(Intent.EXTRA_USER);
