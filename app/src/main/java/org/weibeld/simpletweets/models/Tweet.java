@@ -38,6 +38,7 @@ public class Tweet extends BaseModel {
 	@Column
     public String text;
 
+    // TODO: define composite primary key on "id" and "type", so that all timelines can be saved independently from each other (even if they are composed of identical tweets)
 	@Column
 	public int type;
 
@@ -62,6 +63,17 @@ public class Tweet extends BaseModel {
     public static void clearTable() {
         SQLite.delete().from(Tweet.class).query();
     }
+
+	public static void deleteTimelineTweets(int type) {
+		SQLite.delete().from(Tweet.class).where(Tweet_Table.type.is(type)).query();
+	}
+
+	public static void deleteUserTimelineTweets(User user) {
+		SQLite.delete().from(Tweet.class)
+				.where(Tweet_Table.type.is(TYPE_USER))
+				.and(Tweet_Table.user_id.is(user.id))
+				.query();
+	}
 
     public static ArrayList<Tweet> getHomeTimeline() {
         return getTimeline(TYPE_HOME);

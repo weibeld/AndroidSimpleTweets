@@ -86,7 +86,7 @@ public class User extends BaseModel implements Serializable {
 
     // Delete all rows of this table
     public static void clearTable() {
-        SQLite.delete().from(Tweet.class).query();
+        SQLite.delete().from(User.class).query();
     }
 
 

@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.weibeld.simpletweets.R;
-import org.weibeld.simpletweets.db.DbUtils;
 import org.weibeld.simpletweets.misc.MyApplication;
 import org.weibeld.simpletweets.misc.Util;
 import org.weibeld.simpletweets.models.Tweet;
@@ -53,7 +52,7 @@ public class HomeTimelineFragment extends TimelineFragment {
                 if (page == 1) {
                     // Clear all existing data
                     mAdapter.clear();
-                    DbUtils.clearTables();
+                    Tweet.deleteTimelineTweets(TYPE_HOME);
                     // Save the "last update" time in the SharedPreferences
                     long ts = GregorianCalendar.getInstance().getTimeInMillis();
                     MyApplication.getPrefs()
