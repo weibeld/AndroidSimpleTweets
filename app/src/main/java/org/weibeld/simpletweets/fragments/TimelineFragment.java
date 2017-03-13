@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -22,7 +23,6 @@ import org.weibeld.simpletweets.databinding.FragmentTimelineBinding;
 import org.weibeld.simpletweets.managers.OfflineModeManager;
 import org.weibeld.simpletweets.misc.EndlessRecyclerViewScrollListener;
 import org.weibeld.simpletweets.misc.MyApplication;
-import org.weibeld.simpletweets.misc.SpacingItemDecoration;
 import org.weibeld.simpletweets.misc.Util;
 import org.weibeld.simpletweets.models.Tweet;
 import org.weibeld.simpletweets.models.Tweet_Table;
@@ -79,7 +79,8 @@ public abstract class TimelineFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         b.recyclerView.setAdapter(mAdapter);
         b.recyclerView.setLayoutManager(mLayoutManager);
-        b.recyclerView.addItemDecoration(new SpacingItemDecoration(26));
+        //b.recyclerView.addItemDecoration(new SpacingItemDecoration(26));
+        b.recyclerView.addItemDecoration(new DividerItemDecoration(b.recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         b.swipeContainer.setOnRefreshListener(() -> getTweetsFromApi(1, true));
         b.swipeContainer.setColorSchemeResources(R.color.twitterStrong, R.color.twitterLight);
         mScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {

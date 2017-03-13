@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/twitterLight"
+        android:background="@android:color/white"
         >
 
         <android.support.v7.widget.Toolbar
@@ -33,21 +33,22 @@
             android:id="@+id/activity_compose"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="12dp"
             tools:context="org.weibeld.simpletweets.activities.ComposeActivity">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/userLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!--<android.support.v7.widget.CardView-->
+                <!--android:id="@+id/userLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
                 <RelativeLayout
+                    android:id="@+id/userLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:background="@android:color/background_light"
-                    android:padding="6dp"
-                    android:gravity="center_vertical">
+                    android:background="@color/twitterBackground"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    >
 
                     <ImageView
                         android:id="@+id/ivProfileImage"
@@ -97,7 +98,7 @@
 
                 </RelativeLayout>
 
-            </android.support.v7.widget.CardView>
+            <!--</android.support.v7.widget.CardView>-->
 
             <EditText
                 android:id="@+id/etCompose"
@@ -108,6 +109,8 @@
                 android:hint="@string/hint_edit_text"
                 android:gravity="top"
                 android:inputType="textCapSentences|textMultiLine"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
                 />
 
             <LinearLayout
@@ -116,7 +119,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="12dp"
+                >
 
                 <TextView
                     android:id="@+id/tvCharacterCount"

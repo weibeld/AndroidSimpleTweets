@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#FF000000</color>
     <color name="twitterLight">#501c9dec</color>
     <color name="twitterStrong">#FF1c9dec</color>
+    <color name="twitterBackground">#F3F6F8</color>
     <color name="alternativeAccent">#404040</color>
 </resources>

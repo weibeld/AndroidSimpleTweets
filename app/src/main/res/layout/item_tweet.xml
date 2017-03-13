@@ -8,18 +8,19 @@
         <variable name="tweet" type="org.weibeld.simpletweets.models.Tweet"/>
     </data>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:elevation="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        >
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--card_view:elevation="4dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--&gt;-->
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:padding="8dp"
+            android:background="@android:color/white"
             >
 
             <ImageView
@@ -65,6 +66,6 @@
 
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    <!--</android.support.v7.widget.CardView>-->
 
 </layout>

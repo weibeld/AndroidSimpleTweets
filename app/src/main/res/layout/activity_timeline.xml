@@ -8,8 +8,8 @@
         android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/twitterLight"
         android:orientation="vertical"
+        android:background="@color/twitterBackground"
         tools:context="com.codepath.apps.restclienttemplate.com.weibeld.simpletweets.activities.TimelineActivity">
 
         <android.support.v7.widget.Toolbar

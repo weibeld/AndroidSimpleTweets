@@ -11,7 +11,7 @@
     <string name="pref_current_user">pref_current_user</string>
     <string name="pref_last_update_home_timeline">pref_last_update_home_timeline</string>
     <string name="pref_last_update_mentions_timeline">pref_last_update_mentions_timeline</string>
-    <string name="subtitle_app_bar">%1$s\'s home timeline</string>
+    <string name="subtitle_app_bar">%1$s\'s timelines</string>
     <string name="toast_network_error_timeline">Could not contact server. Do you have an active Internet connection?</string>
     <string name="toast_server_error_timeline_tweets">There was an error getting data from the server: %1$s</string>
     <string name="toast_server_error_timeline_user">There was an error getting your user data from the server: %1$s</string>

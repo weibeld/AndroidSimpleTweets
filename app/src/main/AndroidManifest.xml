@@ -46,6 +46,7 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:parentActivityName=".activities.TimelineActivity"
+            android:screenOrientation="portrait"
             />
 
 

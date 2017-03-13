@@ -48,7 +48,7 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
         mLoginMgr.determineAuthenticatedUser(new LoginManager.DetermineUserCallback() {
             @Override
             public void success(User user) {
-                getSupportActionBar().setSubtitle(user.screenName);
+                getSupportActionBar().setSubtitle(String.format(getString(R.string.subtitle_app_bar), user.screenName));
             }
             @Override
             public void httpFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
