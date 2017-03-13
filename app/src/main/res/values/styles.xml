@@ -65,4 +65,13 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
+    <style name="TextPrimary" parent="android:Widget.TextView">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextSecondary" parent="android:Widget.TextView">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">#8A000000</item>
+    </style>
+
 </resources>

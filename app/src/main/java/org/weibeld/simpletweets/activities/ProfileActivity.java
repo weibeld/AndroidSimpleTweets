@@ -21,9 +21,17 @@ public class ProfileActivity extends AppCompatActivity {
         b = DataBindingUtil.setContentView(this, R.layout.activity_profile);
         mActivity = this;
 
+        setSupportActionBar(b.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // The user whose profile to display
         mUser = (User) getIntent().getSerializableExtra(Intent.EXTRA_USER);
         b.setUser(mUser);
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true; }
 }

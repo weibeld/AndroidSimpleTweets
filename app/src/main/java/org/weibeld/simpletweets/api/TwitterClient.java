@@ -68,18 +68,22 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(userApiUrl, params, handler);
     }
 
-    public void getUserProfile(AsyncHttpResponseHandler handler, long uid) {
-        Log.d(LOG_TAG, "getUserProfile");
-        String userApiUrl = getApiUrl("users/show.json");
-        RequestParams params = new RequestParams();
-        params.put("user_id", String.valueOf(uid));
-        client.get(userApiUrl, params, handler);
-    }
+//    public void getUserProfile(AsyncHttpResponseHandler handler, long uid) {
+//        Log.d(LOG_TAG, "getUserProfile");
+//        String userApiUrl = getApiUrl("users/show.json");
+//        RequestParams params = new RequestParams();
+//        params.put("user_id", String.valueOf(uid));
+//        client.get(userApiUrl, params, handler);
+//    }
 
     public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
         Log.d(LOG_TAG, "getUserTimeline");
         String currentUserApiUrl = getApiUrl("statuses/user_timeline.json");
         Log.d(LOG_TAG, "Api Url:" + currentUserApiUrl);
+        // RequestParams should contain:
+        // - "screen_name"
+        // - "max_id" in subsequent requests
+
         client.get(currentUserApiUrl, params, handler);
     }
 }
