@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="tweet" type="org.weibeld.simpletweets.models.Tweet"/>
     </data>
-
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--card_view:elevation="4dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--&gt;-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,7 +55,5 @@
                 />
 
         </RelativeLayout>
-
-    <!--</android.support.v7.widget.CardView>-->
 
 </layout>
