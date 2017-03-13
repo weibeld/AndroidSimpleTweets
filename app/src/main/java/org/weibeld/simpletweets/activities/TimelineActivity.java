@@ -86,13 +86,11 @@ public class TimelineActivity extends AppCompatActivity implements TimelineFragm
             case R.id.action_profile:
                 showUserProfile(mLoginMgr.getAuthenticatedUser());
                 return true;
+            case R.id.action_compose:
+                startActivity(new Intent(this, ComposeActivity.class));
+                return true;
         }
         return false;
-    }
-
-    @Override
-    public void onFabClicked() {
-        startActivity(new Intent(this, ComposeActivity.class));
     }
 
     @Override

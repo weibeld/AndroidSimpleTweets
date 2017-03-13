@@ -88,7 +88,6 @@ public abstract class TimelineFragment extends Fragment {
                 getTweetsFromApi(page, false);
             }
         };
-        b.fab.setOnClickListener(v -> mGeneralListener.onFabClicked());
 
         OfflineModeManager modeManager = OfflineModeManager.getInstance();
         if (!modeManager.isOfflineMode()) {
@@ -140,7 +139,6 @@ public abstract class TimelineFragment extends Fragment {
     public abstract String getTitle();
 
     public interface TimelineFragmentListener {
-        void onFabClicked();
         void onProfileImageClicked(User user);
     }
 

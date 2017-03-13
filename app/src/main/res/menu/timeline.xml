@@ -5,9 +5,15 @@
 
     <item
         android:id="@+id/action_profile"
-        android:title="Profile"
+        android:title="@string/action_profile"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_face_white_24dp"/>
+
+    <item
+        android:id="@+id/action_compose"
+        android:title="@string/action_compose"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_feather_white_24dp"/>
 
     <item
         android:id="@+id/action_logout"

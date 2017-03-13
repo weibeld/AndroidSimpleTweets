@@ -47,12 +47,5 @@ public class ProfileActivity extends AppCompatActivity implements TimelineFragme
         return true; }
 
     @Override
-    public void onFabClicked() {
-
-    }
-
-    @Override
-    public void onProfileImageClicked(User user) {
-
-    }
+    public void onProfileImageClicked(User user) {}
 }
