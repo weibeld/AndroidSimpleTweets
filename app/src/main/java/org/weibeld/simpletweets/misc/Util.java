@@ -100,6 +100,7 @@ public class Util {
         Toast.makeText(a, msg, Toast.LENGTH_LONG).show();
     }
 
+    // TODO: find a better way to test Internet connection, because in some networks pings are blocked (e.g. American Consulate)
     // Check if the device is connected to the internet by pinging a known server
     public static boolean hasInternetConnection() {
         Runtime runtime = Runtime.getRuntime();
