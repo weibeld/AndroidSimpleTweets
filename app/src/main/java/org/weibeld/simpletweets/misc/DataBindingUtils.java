@@ -28,11 +28,11 @@ public class DataBindingUtils {
     @BindingAdapter({"bind:profileImageUrl"})
     public static void loadProfileImage(ImageView view, String url) {
         if (url == null || url.isEmpty())
-            url = Uri.parse("R.drawable.placeholder_profile_image_360").toString();
+            url = Uri.parse("R.drawable.ph_profile_image_360").toString();
         Log.d(LOG_TAG, "Loading image " + url);
         Picasso.with(view.getContext())
                 .load(url)
-                .placeholder(R.drawable.placeholder_profile_image_360)
+                .placeholder(R.drawable.ph_profile_image_360)
                 .transform(new RoundedTransformation(0.0833, 0))
                 .into(view);
     }
@@ -41,11 +41,11 @@ public class DataBindingUtils {
     @BindingAdapter({"bind:profileBannerUrl"})
     public static void loadProfileBanner(ImageView view, String url) {
         if (url == null || url.isEmpty())
-            url = Uri.parse("R.drawable.placeholder_banner").toString();
+            url = Uri.parse("R.drawable.ph_profile_banner").toString();
         Log.d(LOG_TAG, "Loading banner " + url);
         Picasso.with(view.getContext())
                 .load(url)
-                .placeholder(R.drawable.placeholder_banner)
+                .placeholder(R.drawable.ph_profile_banner)
                 .into(view);
     }
 }

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:tint="@android:color/white"
-            android:src="@drawable/twitter_logo_large"/>
+            android:src="@drawable/twitter_logo"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
