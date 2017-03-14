@@ -32,9 +32,10 @@
             />
 
         <ImageView
-            android:layout_width="400dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:tint="@android:color/white"
             android:src="@drawable/twitter_logo"/>
 
         <ProgressBar
